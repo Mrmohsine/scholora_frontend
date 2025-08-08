@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎓 Scholora Frontend
 
-## Getting Started
+**Plateforme d'éducation en ligne avec cours live et abonnements mensuels**
 
-First, run the development server:
+Application Next.js pour connecter étudiants et professeurs à travers des formations en direct.
+
+## 🚀 Démarrage rapide
 
 ```bash
+# Installation
+git clone https://github.com/OBouysfi/scholora_frontend.git
+cd scholora_frontend
+npm install
+
+# Développement
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Avec Docker
+docker-compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Accès :** http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Stack Technique
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend :** Next.js 14 + TypeScript + Tailwind CSS
+- **State :** Zustand + React Query
+- **Auth :** NextAuth.js
+- **Payments :** Stripe
+- **UI :** Headless UI + Heroicons
 
-## Learn More
+## ⚙️ Configuration
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Variables d'environnement
+cp .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
 
-## Deploy on Vercel
+## 📁 Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/          # App Router Next.js
+├── components/   # Composants réutilisables
+├── hooks/        # Custom hooks
+├── lib/          # Configurations
+├── stores/       # State management
+└── types/        # Types TypeScript
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🐳 Docker
+
+```bash
+# Développement
+docker-compose up --build
+
+# Services inclus
+Frontend:      http://localhost:3000
+Backend API:   http://localhost:8000
+PostgreSQL:    localhost:5432
+Redis:         localhost:6379
+Elasticsearch: http://localhost:9200
+```
+
+## 📋 Scripts
+
+```bash
+npm run dev         # Développement
+npm run build       # Build production
+npm run lint        # Linting
+npm run test        # Tests
+```
+
+## 🚀 Fonctionnalités
+
+- ✅ **Multi-portails** : Étudiant, Professeur, Admin
+- ✅ **Abonnements** mensuels avec Stripe
+- ✅ **Cours live** en temps réel
+- ✅ **Calendrier** intelligent
+- ✅ **Recherche** avancée
+- ✅ **Responsive** design
+
+## 👥 Contribution
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/ma-feature`)
+3. Commit (`git commit -m 'Add: nouvelle fonctionnalité'`)
+4. Push (`git push origin feature/ma-feature`)
+5. Ouvrir une Pull Request
+
+## 📄 License
+
+MIT License - voir [LICENSE](LICENSE)
