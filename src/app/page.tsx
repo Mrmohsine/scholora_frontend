@@ -15,11 +15,16 @@ export default function HomePage() {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-white font-bold text-lg">S</span>
-                </div>
-                <span className="text-2xl font-bold text-gray-900 tracking-tight">Scholora</span>
+              <Link href="/" className="flex items-center">                
+                <div className="flex items-center mr-3">
+                <Image
+                  src="/images/logos/logo_blue.png"
+                  alt="Scholora Logo"
+                  width={200}   
+                  height={320}
+                  className="rounded-lg"
+                />
+              </div>
               </Link>
               <div className="hidden md:block ml-12">
                 <div className="flex items-baseline space-x-8">
