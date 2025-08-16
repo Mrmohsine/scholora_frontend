@@ -1,8 +1,13 @@
+'use client';
 import Link from 'next/link'
 import Image from 'next/image'
 import { Star, Users, BookOpen, Award, ChevronRight, Play, User, Calendar, Clock } from 'lucide-react'
+import { useState } from 'react';
+
 
 export default function HomePage() {
+   const [isModalOpen, setIsModalOpen] = useState(false);
+   const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
   return (
     <div className="min-h-screen bg-white font-sans">
       {/* Header */}
@@ -74,11 +79,44 @@ export default function HomePage() {
               <Link href="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold px-10 py-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
                 Find Your Tutor
               </Link>
-              <button className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-lg font-semibold px-10 py-4 rounded-xl flex items-center justify-center transition-all duration-200 transform hover:scale-105">
+              <button 
+               onClick={() => setIsModalOpen(true)}
+              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-lg font-semibold px-10 py-4 rounded-xl flex items-center justify-center transition-all duration-200 transform hover:scale-105">
                 <Play className="w-5 h-5 mr-3 fill-current" />
                 Watch Demo
               </button>
+              
             </div>
+
+            {/* Modal for Video Demo */}
+            {isModalOpen && (
+              <div
+                className="fixed inset-0 flex items-center justify-center z-50"
+                style={{ backgroundColor: "rgba(102, 98, 98, 0.53)" }} 
+                onClick={() => setIsModalOpen(false)} 
+              >
+                {/* Bouton de fermeture */}
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold"
+                  >
+                    ✕
+                  </button>
+                <div
+                  className="bg-transparent rounded-lg p-6 w-full relative"
+                  style={{ maxWidth: "75%" }} 
+                  onClick={(e) => e.stopPropagation()} 
+                >
+                  
+
+                  {/* Vidéo */}
+                  <video controls autoPlay  className="w-full h-auto rounded-lg">
+                    <source src={videoUrl} type="video/mp4" />
+                    Votre navigateur ne supporte pas la balise vidéo.
+                  </video>
+                </div>
+              </div>
+            )}
             
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-20">
@@ -592,4 +630,5 @@ export default function HomePage() {
       </footer>
     </div>
   )
+  
 }
