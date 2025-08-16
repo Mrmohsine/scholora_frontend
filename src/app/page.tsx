@@ -3,60 +3,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Star, Users, BookOpen, Award, ChevronRight, Play, User, Calendar, Clock } from 'lucide-react'
 import { useState } from 'react';
-
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b sticky top-0 z-50">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center">                
-                <div className="flex items-center mr-3">
-                <Image
-                  src="/images/logos/logo_blue.png"
-                  alt="Scholora Logo"
-                  width={200}   
-                  height={320}
-                  className="rounded-lg"
-                />
-              </div>
-              </Link>
-              <div className="hidden md:block ml-12">
-                <div className="flex items-baseline space-x-8">
-                  <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                    How it works
-                  </a>
-                  <a href="#tutors" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                    Featured Tutors
-                  </a>
-                  <a href="#success-stories" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                    Success Stories
-                  </a>
-                  <a href="#subjects" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                    Subjects
-                  </a>
-                  <a href="#newsletter" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                    Stay in the loop
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/auth/login" className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                Log in
-              </Link>
-              <Link href="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm">
-                Get a Tutor
-              </Link>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-24 overflow-hidden">
@@ -584,56 +539,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div>
-              <div className="flex items-center mb-6">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3">
-                  <span className="text-white font-bold text-xl">S</span>
-                </div>
-                <span className="text-2xl font-bold text-white">Scholora</span>
-              </div>
-              <p className="text-gray-400 mb-6 leading-relaxed">
-                Connecting students across Morocco with expert tutors for academic excellence.
-              </p>
-            </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Explore</h3>
-              <ul className="space-y-3">
-                <li><a href="#tutors" className="text-gray-400 hover:text-white transition-colors font-medium">Featured Tutors</a></li>
-                <li><a href="#subjects" className="text-gray-400 hover:text-white transition-colors font-medium">Popular Subjects</a></li>
-                <li><a href="#success-stories" className="text-gray-400 hover:text-white transition-colors font-medium">Success Stories</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Company</h3>
-              <ul className="space-y-3">
-                <li><a href="/public/about" className="text-gray-400 hover:text-white transition-colors font-medium">About</a></li>
-                <li><a href="/public/contact" className="text-gray-400 hover:text-white transition-colors font-medium">Contact</a></li>
-                <li><a href="/careers" className="text-gray-400 hover:text-white transition-colors font-medium">Careers</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-bold text-white mb-6 text-lg">Legal</h3>
-              <ul className="space-y-3">
-                <li><a href="/legal/terms" className="text-gray-400 hover:text-white transition-colors font-medium">Terms</a></li>
-                <li><a href="/legal/privacy" className="text-gray-400 hover:text-white transition-colors font-medium">Privacy</a></li>
-                <li><a href="/legal/cookies" className="text-gray-400 hover:text-white transition-colors font-medium">Cookies</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-16 pt-8 text-center">
-            <p className="text-gray-400 font-medium">© 2025 Scholora. All rights reserved. Made with in Morocco</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
-  
 }
