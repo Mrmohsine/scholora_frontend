@@ -169,15 +169,15 @@ const LoginPage: React.FC = () => {
     const errors: Record<string, string> = {};
 
     if (!formData.email) {
-      errors.email = 'L\'email est requis';
+      errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Format d\'email invalide';
+      errors.email = 'Invalid email format';
     }
 
     if (!formData.password) {
-      errors.password = 'Le mot de passe est requis';
+      errors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      errors.password = 'Le mot de passe doit contenir au moins 6 caractères';
+      errors.password = 'Password must contain at least 6 characters';
     }
 
     setValidationErrors(errors);
@@ -213,7 +213,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4" style={{ zoom: '0.8' }}>
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -223,12 +223,14 @@ const LoginPage: React.FC = () => {
 
       <div className="relative w-full max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="mx-auto w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-            <GraduationCap className="w-8 h-8 text-white" />
+        <div className="text-center mb-7">
+          <div className="mx-auto h-16 mb-5 relative">
+            <img
+              src="/images/logos/logo_blue.png"
+              alt="Scholora Logo"
+              className="w-full h-full rounded-2xl object-cover"
+            />
           </div>
-          
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Scholora</h1>
           <p className="text-gray-600 font-medium mb-1">Administrative Portal</p>
           
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
@@ -266,7 +268,7 @@ const LoginPage: React.FC = () => {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className={`w-full pl-12 pr-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white ${
+                  className={`w-full pl-12 pr-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 ${
                     validationErrors.email ? 'border-red-300 focus:ring-red-500' : 'border-gray-200'
                   }`}
                   placeholder="admin@scholora.com"
@@ -291,7 +293,7 @@ const LoginPage: React.FC = () => {
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className={`w-full pl-12 pr-12 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white ${
+                  className={`w-full pl-12 pr-12 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 ${
                     validationErrors.password ? 'border-red-300 focus:ring-red-500' : 'border-gray-200'
                   }`}
                   placeholder="Enter your secure password"
@@ -344,26 +346,13 @@ const LoginPage: React.FC = () => {
               ) : (
                 <>
                   <GraduationCap className="w-5 h-5 mr-2" />
-                  Sign In to Dashboard
+                  Sign In
                 </>
               )}
             </button>
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500">
-          <p>© 2024 Scholora Educational Platform. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-2">
-            <button className="hover:text-gray-700 transition-colors focus:outline-none focus:underline">
-              Privacy Policy
-            </button>
-            <span>•</span>
-            <button className="hover:text-gray-700 transition-colors focus:outline-none focus:underline">
-              Terms of Service
-            </button>
-          </div>
-        </div>
+      
       </div>
     </div>
   );

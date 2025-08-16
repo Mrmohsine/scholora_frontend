@@ -99,3 +99,48 @@ npm run test        # Tests
 ## 📄 License
 
 MIT License - voir [LICENSE](LICENSE)
+
+# Scholora Frontend
+
+Frontend Next.js pour la plateforme éducative Scholora.
+
+## Installation
+
+Après avoir cloné le projet :
+
+```bash
+npm i
+```
+
+## Docker
+
+### Construire l'image
+```bash
+docker build -t scholora_frontend .
+```
+
+### Lancer le container
+```bash
+docker run --name scholora_frontend -p 5173:3000 scholora_frontend
+```
+
+### Arrêter et supprimer
+```bash
+docker stop scholora_frontend
+docker rm scholora_frontend
+```
+
+## URLs
+
+- **Frontend** : http://localhost:5173
+- **Login Admin** : http://localhost:5173/auth/login
+
+## Identifiants de test
+
+- ** contacter OTHMAN BOUYSFI
+
+## Prérequis
+
+- Docker
+- Node.js 18+
+- Backend Laravel en cours d'exécution sur le port 8000

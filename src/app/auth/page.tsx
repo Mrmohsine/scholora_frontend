@@ -344,26 +344,13 @@ const LoginPage: React.FC = () => {
               ) : (
                 <>
                   <GraduationCap className="w-5 h-5 mr-2" />
-                  Sign In to Dashboard
+                  Sign In
                 </>
               )}
             </button>
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="text-center mt-8 text-sm text-gray-500">
-          <p>© 2024 Scholora Educational Platform. All rights reserved.</p>
-          <div className="flex justify-center space-x-4 mt-2">
-            <button className="hover:text-gray-700 transition-colors focus:outline-none focus:underline">
-              Privacy Policy
-            </button>
-            <span>•</span>
-            <button className="hover:text-gray-700 transition-colors focus:outline-none focus:underline">
-              Terms of Service
-            </button>
-          </div>
-        </div>
+       
       </div>
     </div>
   );
