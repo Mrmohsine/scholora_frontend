@@ -2,13 +2,24 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Star, Users, BookOpen, Award, ChevronRight, Play, User, Calendar, Clock } from 'lucide-react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
 export default function HomePage() {
    const [isModalOpen, setIsModalOpen] = useState(false);
+   const [currentSlide, setCurrentSlide] = useState(0);
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+
+   // Auto-scroll effect pour Success Stories - scroll continu 1 par 1
+   useEffect(() => {
+     const interval = setInterval(() => {
+       setCurrentSlide((prev) => (prev + 1) % 7); // 7 positions de scroll possibles
+     }, 3000); // Change slide every 3 seconds
+
+     return () => clearInterval(interval);
+   }, []);
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <Header />
@@ -431,74 +442,127 @@ export default function HomePage() {
             <h3 className="text-3xl font-semibold text-gray-700 mb-6">Real results from real students</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Story 1 - Oumaima */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-2xl">👩‍🎓</span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Oumaima, Casablanca</h4>
-                  <p className="text-gray-600 text-sm">Baccalauréat • Math</p>
-                </div>
-              </div>
-              
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                "My tutor helped me master calculus concepts I struggled with for months. I scored 18/20 in my finals!"
-              </p>
-              
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
+          <div className="relative">
+            {/* Slider Container */}
+            <div className="overflow-hidden rounded-2xl">
+              <div 
+                className="flex transition-transform duration-1000 ease-in-out"
+                style={{ 
+                  transform: `translateX(-${(currentSlide * 100) / 3}%)`,
+                }}
+              >
+                {/* Tous les témoignages en ligne */}
+                {[
+                  // Story 1 - Oumaima
+                  {
+                    name: "Oumaima, Casablanca",
+                    subject: "Baccalauréat • Math",
+                    quote: "My tutor helped me master calculus concepts I struggled with for months. I scored 18/20 in my finals!",
+                    avatar: "👩‍🎓",
+                    bgColor: "bg-blue-100"
+                  },
+                  // Story 2 - Karim
+                  {
+                    name: "Karim, Rabat",
+                    subject: "IELTS • English",
+                    quote: "I achieved a band 7.5 on IELTS after 8 weeks. The personalized plan made all the difference.",
+                    avatar: "👨‍🎓",
+                    bgColor: "bg-green-100"
+                  },
+                  // Story 3 - Nisrine
+                  {
+                    name: "Nisrine, Marrakech",
+                    subject: "French • Literature",
+                    quote: "We focused on writing structure and analysis. My essay grades improved from 12 to 17/20.",
+                    avatar: "👩‍💻",
+                    bgColor: "bg-purple-100"
+                  },
+                  // Story 4 - Ahmed
+                  {
+                    name: "Ahmed, Fes",
+                    subject: "Physics • Bac",
+                    quote: "The interactive sessions helped me understand complex physics concepts. Got 19/20 in physics!",
+                    avatar: "👨‍🔬",
+                    bgColor: "bg-orange-100"
+                  },
+                  // Story 5 - Fatima
+                  {
+                    name: "Fatima, Meknes",
+                    subject: "Spanish • Language",
+                    quote: "From beginner to conversational in 6 months. Now I'm confident speaking Spanish fluently.",
+                    avatar: "👩‍🎨",
+                    bgColor: "bg-pink-100"
+                  },
+                  // Story 6 - Youssef
+                  {
+                    name: "Youssef, Tangier",
+                    subject: "Economics • University",
+                    quote: "Preparation for my economics exam was perfect. I passed with distinction thanks to my tutor.",
+                    avatar: "👨‍💼",
+                    bgColor: "bg-indigo-100"
+                  },
+                  // Story 7 - Salma
+                  {
+                    name: "Salma, Agadir",
+                    subject: "Chemistry • Medical School",
+                    quote: "Organic chemistry became clear with my tutor's explanations. Aced my medical school entrance exam!",
+                    avatar: "👩‍⚕️",
+                    bgColor: "bg-teal-100"
+                  },
+                  // Story 8 - Hamza
+                  {
+                    name: "Hamza, Oujda",
+                    subject: "Programming • Computer Science",
+                    quote: "Learning Python and algorithms was challenging until I found the right tutor. Now I'm coding confidently!",
+                    avatar: "👨‍💻",
+                    bgColor: "bg-yellow-100"
+                  },
+                  // Story 9 - Zineb
+                  {
+                    name: "Zineb, Kenitra",
+                    subject: "German • Language Certification",
+                    quote: "Achieved B2 level in German in just 8 months. My tutor's systematic approach was incredibly effective.",
+                    avatar: "👩‍🏫",
+                    bgColor: "bg-red-100"
+                  }
+                ].map((story, index) => (
+                  <div key={index} className="w-1/3 flex-shrink-0 px-4">
+                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+                      <div className="flex items-center mb-4">
+                        <div className={`w-12 h-12 ${story.bgColor} rounded-full flex items-center justify-center mr-4`}>
+                          <span className="text-2xl">{story.avatar}</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-gray-900 text-lg">{story.name}</h4>
+                          <p className="text-gray-600 text-sm">{story.subject}</p>
+                        </div>
+                      </div>
+                      <p className="text-gray-700 mb-4 leading-relaxed">
+                        "{story.quote}"
+                      </p>
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-current" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Story 2 - Karim */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-2xl">👨‍🎓</span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Karim, Rabat</h4>
-                  <p className="text-gray-600 text-sm">IELTS • English</p>
-                </div>
-              </div>
-              
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                "I achieved a band 7.5 on IELTS after 8 weeks. The personalized plan made all the difference."
-              </p>
-              
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
-                ))}
-              </div>
-            </div>
-
-            {/* Story 3 - Nisrine */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-2xl">👩‍💻</span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 text-lg">Nisrine, Marrakech</h4>
-                  <p className="text-gray-600 text-sm">French • Literature</p>
-                </div>
-              </div>
-              
-              <p className="text-gray-700 mb-4 leading-relaxed">
-                "We focused on writing structure and analysis. My essay grades improved from 12 to 17/20."
-              </p>
-              
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-current" />
-                ))}
-              </div>
+            {/* Dots Indicator seulement */}
+            <div className="flex justify-center space-x-2 mt-8">
+              {[...Array(9)].map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-blue-600 scale-125' 
+                      : 'bg-gray-300'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
