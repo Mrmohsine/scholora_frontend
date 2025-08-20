@@ -5,70 +5,87 @@ import { useRouter } from 'next/navigation';
 import { authService } from '../../../lib/auth/authService';
 
 export default function LogoutPage() {
-  const [isLoggingOut, setIsLoggingOut] = useState(true);
-  const [message, setMessage] = useState('Déconnexion en cours...');
+  const [status, setStatus] = useState<'logging-out' | 'success' | 'error'>('logging-out');
   const router = useRouter();
 
   useEffect(() => {
     const performLogout = async () => {
       try {
-        setIsLoggingOut(true);
-        setMessage('Déconnexion en cours...');
-
-        // Appeler la méthode logout du service
         await authService.logout();
-        
-        setMessage('Déconnexion réussie, redirection...');
-        
-        // Attendre un petit moment pour que l'utilisateur voie le message
-        setTimeout(() => {
-          // Rediriger vers la page de connexion
-          router.push('/auth/login');
-        }, 1000);
-
-      } catch (error) {
-        console.error('Erreur lors de la déconnexion:', error);
-        setMessage('Erreur lors de la déconnexion, redirection...');
-        
-        // Même si l'API échoue, nettoyer localement et rediriger
         authService.clearAuth();
         
+        // Nettoyage spécifique du token trouvé dans vos logs
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('scholora_access_token');
+        }
+        
+        setStatus('success');
+        
+        // Redirection immédiate sans délai inutile
+        window.location.href = '/auth/login';
+        
+      } catch (error) {
+        console.error('Logout error:', error);
+        setStatus('error');
+        
+        // Nettoyage forcé même en cas d'erreur
+        authService.clearAuth();
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('scholora_access_token');
+        }
+        
+        // Redirection même en cas d'erreur
         setTimeout(() => {
-          router.push('/auth/login');
-        }, 1500);
-      } finally {
-        setIsLoggingOut(false);
+          window.location.href = '/auth/login';
+        }, 1000);
       }
     };
 
-    // Démarrer le processus de déconnexion
     performLogout();
-  }, [router]);
+  }, []);
+
+  const getStatusMessage = () => {
+    switch (status) {
+      case 'logging-out':
+        return 'Déconnexion en cours...';
+      case 'success':
+        return 'Déconnexion réussie';
+      case 'error':
+        return 'Déconnexion en cours...';
+      default:
+        return 'Déconnexion en cours...';
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
+      <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full mx-4">
         <div className="text-center">
-          {/* Spinner de chargement */}
-          <div className="mx-auto mb-4 w-12 h-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="mx-auto mb-6 w-16 h-16 flex items-center justify-center">
+            {status === 'error' ? (
+              <div className="w-8 h-8 text-red-500">
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </div>
+            ) : (
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            )}
           </div>
           
-          {/* Message de statut */}
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             Déconnexion
           </h2>
+          
           <p className="text-gray-600">
-            {message}
+            {getStatusMessage()}
           </p>
           
-          {/* Barre de progression optionnelle */}
-          <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
-            <div 
-              className="bg-blue-600 h-2 rounded-full transition-all duration-1000 ease-out"
-              style={{ width: isLoggingOut ? '60%' : '100%' }}
-            ></div>
-          </div>
+          {status === 'success' && (
+            <p className="text-sm text-green-600 mt-2">
+              Redirection vers la page de connexion...
+            </p>
+          )}
         </div>
       </div>
     </div>
