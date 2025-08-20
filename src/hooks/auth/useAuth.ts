@@ -1,108 +1,127 @@
-// hooks/auth/useAuth.ts
-import { useState, useEffect, useCallback } from 'react';
-import { authService } from '../../lib/auth/authService';
-import { ROUTES } from '../../lib/auth/config';
-import type { User, LoginRequest, AuthError } from '../../types/auth';
+// lib/auth/authService.ts
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
-interface UseAuthReturn {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  error: AuthError | null;
-  login: (credentials: LoginRequest) => Promise<void>;
-  logout: () => Promise<void>;
-  clearError: () => void;
+class AuthService {
+  private tokenKey = 'auth_token';
+  private userKey = 'auth_user';
+
+  // Méthodes existantes...
+  
+  async logout(): Promise<void> {
+    const token = this.getToken();
+    
+    if (token) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          console.warn('Logout request failed, but continuing with local cleanup');
+        }
+      } catch (error) {
+        console.error('Logout API error:', error);
+        // Continue avec le nettoyage local même si l'API échoue
+      }
+    }
+    
+    // Nettoyer le stockage local
+    this.clearAuth();
+  }
+
+  async getCurrentUser(): Promise<any> {
+    const token = this.getToken();
+    
+    if (!token) {
+      throw new Error('No token available');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        this.clearAuth();
+        throw new Error('Token expired');
+      }
+      throw new Error('Failed to get user info');
+    }
+
+    const userData = await response.json();
+    
+    // Sauvegarder les données utilisateur
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.userKey, JSON.stringify(userData));
+    }
+    
+    return userData;
+  }
+
+  async refreshToken(): Promise<void> {
+    const token = this.getToken();
+    
+    if (!token) {
+      throw new Error('No token available');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      this.clearAuth();
+      throw new Error('Token refresh failed');
+    }
+
+    const result = await response.json();
+    this.setToken(result.access_token);
+  }
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(this.tokenKey);
+    }
+    return null;
+  }
+
+  setToken(token: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(this.tokenKey, token);
+    }
+  }
+
+  getUser(): any {
+    if (typeof window !== 'undefined') {
+      const userData = localStorage.getItem(this.userKey);
+      return userData ? JSON.parse(userData) : null;
+    }
+    return null;
+  }
+
+  clearAuth(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.userKey);
+    }
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
 }
 
-export const useAuth = (): UseAuthReturn => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<AuthError | null>(null);
-
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
-  const login = useCallback(async (credentials: LoginRequest): Promise<void> => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response = await authService.login(credentials);
-
-      if (!response.success) {
-        throw new Error(response.message || 'Login failed');
-      }
-
-      if (!response.data.user.is_super_admin) {
-        throw new Error('Accès refusé. Seuls les administrateurs peuvent accéder à ce portail.');
-      }
-
-      setUser(response.data.user);
-      
-      // Redirect to dashboard
-      if (typeof window !== 'undefined') {
-        window.location.href = ROUTES.DASHBOARD;
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Une erreur est survenue';
-      setError({ message: errorMessage });
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const logout = useCallback(async (): Promise<void> => {
-    setIsLoading(true);
-    
-    try {
-      await authService.logout();
-      setUser(null);
-      
-      // Redirect to login
-      if (typeof window !== 'undefined') {
-        window.location.href = ROUTES.LOGIN;
-      }
-    } catch (err) {
-      console.error('Logout error:', err);
-      // Even if logout fails, clear local state
-      setUser(null);
-      authService.clearAuth();
-      
-      if (typeof window !== 'undefined') {
-        window.location.href = ROUTES.LOGIN;
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Initialize auth state
-  useEffect(() => {
-    const initializeAuth = () => {
-      const isAuth = authService.isAuthenticated();
-      const userData = authService.getUser();
-      
-      if (isAuth && userData) {
-        setUser(userData);
-      }
-      
-      setIsLoading(false);
-    };
-
-    initializeAuth();
-  }, []);
-
-  const isAuthenticated = !!user && authService.isAuthenticated();
-
-  return {
-    user,
-    isLoading,
-    isAuthenticated,
-    error,
-    login,
-    logout,
-    clearError,
-  };
-};
+export const authService = new AuthService();
