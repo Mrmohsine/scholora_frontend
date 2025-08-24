@@ -118,7 +118,7 @@ const useAuth = () => {
       
       // Redirect to dashboard
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/dashboard';
+        window.location.href = '/dashboard';
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Une erreur est survenue';
@@ -138,7 +138,7 @@ const useAuth = () => {
       setUser(userData);
       // Redirect if already authenticated
       if (typeof window !== 'undefined') {
-        window.location.href = '/auth/dashboard';
+        window.location.href = '/dashboard';
       }
     }
   }, []);
