@@ -101,22 +101,22 @@ function useStudentsData() {
 }
 
 // Components
-function StatsCard({ title, value, icon, bgColor, iconColor }: {
+function StatsCard({ title, value, icon, iconColor, borderColor }: {
   title: string;
   value: number;
   icon: React.ReactNode;
-  bgColor: string;
   iconColor: string;
+  borderColor: string;
 }) {
   return (
-    <div className={`${bgColor} rounded-xl p-6 border border-gray-200 shadow-sm`}>
-      <div className="flex items-center space-x-4">
-        <div className={`p-3 rounded-xl ${iconColor}`}>
+    <div className={`bg-white rounded-xl p-6 border ${borderColor} shadow-sm`}>
+      <div className="flex items-center space-x-3">
+        <div className={`${iconColor}`}>
           {icon}
         </div>
         <div>
-          <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
-          <p className="text-3xl font-bold text-gray-900">{value.toLocaleString()}</p>
+          <p className="text-2xl font-bold text-gray-900 mb-1">{value.toLocaleString()}</p>
+          <h3 className="text-sm font-medium text-gray-500">{title}</h3>
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@ function StudentsTable({ students, loading }: { students: Student[]; loading: bo
                 placeholder="Search students..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-4 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="pl-4 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,40 +179,40 @@ function StudentsTable({ students, loading }: { students: Student[]; loading: bo
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Student</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Grade/Level</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Subjects</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Tutors</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Sessions</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Status</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-600 text-sm">Actions</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Student</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Grade/Level</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Subjects</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Tutors</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Sessions</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Status</th>
+              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredStudents.map((student) => (
-              <tr key={student.id} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                <td className="py-4 px-6">
+              <tr key={student.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                <td className="py-4 px-6 text-sm">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                      <span className="text-blue-600 font-medium text-sm">
+                      <span className="text-blue-600 font-medium text-xs">
                         {student.name.split(' ').map(n => n[0]).join('')}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{student.name}</p>
-                      <p className="text-sm text-gray-500">{student.email}</p>
+                      <p className="font-medium text-gray-900 text-sm">{student.name}</p>
+                      <p className="text-xs text-gray-500">{student.email}</p>
                     </div>
                   </div>
                 </td>
-                <td className="py-4 px-6 text-gray-600">{student.grade}</td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-gray-600 text-sm">{student.grade}</td>
+                <td className="py-4 px-6 text-sm">
                   <div className="text-gray-600">
                     {student.subjects.join(', ')}
                   </div>
                 </td>
-                <td className="py-4 px-6 text-center text-gray-600">{student.tutors}</td>
-                <td className="py-4 px-6 text-center text-gray-600">{student.sessions}</td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-center text-gray-600 text-sm">{student.tutors}</td>
+                <td className="py-4 px-6 text-center text-gray-600 text-sm">{student.sessions}</td>
+                <td className="py-4 px-6 text-sm">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     student.status === 'active' 
                       ? 'bg-green-100 text-green-800' 
@@ -224,7 +224,7 @@ function StudentsTable({ students, loading }: { students: Student[]; loading: bo
                 <td className="py-4 px-6">
                   <button className="text-gray-400 hover:text-gray-600 p-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                     </svg>
                   </button>
                 </td>
@@ -287,21 +287,21 @@ export default function StudentsPage() {
           <StatsCard
             title="Total Students"
             value={stats?.totalStudents || 0}
-            bgColor="bg-white"
-            iconColor="bg-blue-100"
+            iconColor="text-blue-600"
+            borderColor="border-blue-300"
             icon={
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             }
           />
           <StatsCard
             title="Active Students"
             value={stats?.activeStudents || 0}
-            bgColor="bg-white"
-            iconColor="bg-green-100"
+            iconColor="text-green-600"
+            borderColor="border-green-300"
             icon={
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             }
@@ -309,10 +309,10 @@ export default function StudentsPage() {
           <StatsCard
             title="New This Month"
             value={stats?.newThisMonth || 0}
-            bgColor="bg-white"
-            iconColor="bg-orange-100"
+            iconColor="text-orange-600"
+            borderColor="border-orange-300"
             icon={
-              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             }
@@ -320,10 +320,10 @@ export default function StudentsPage() {
           <StatsCard
             title="Frozen"
             value={stats?.frozen || 0}
-            bgColor="bg-white"
-            iconColor="bg-red-100"
+            iconColor="text-red-600"
+            borderColor="border-red-300"
             icon={
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
               </svg>
             }
