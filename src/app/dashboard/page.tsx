@@ -153,9 +153,10 @@ function StatsCards({ data }) {
   const stats = [
     {
       title: "Monthly Revenue",
-      value: data?.monthlyRevenue ? `$${(data.monthlyRevenue / 1000).toFixed(0)}K` : "$189K",
+      value: data?.monthlyRevenue ? `${(data.monthlyRevenue / 1000).toFixed(0)}K` : "$189K",
       subtitle: "Monthly Revenue",
       bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
       iconBgColor: "bg-white",
       textColor: "text-gray-900",
       trend: "+12.4%",
@@ -171,6 +172,7 @@ function StatsCards({ data }) {
       value: data?.totalUsers ? data.totalUsers.toLocaleString() : "1,520",
       subtitle: "Total Users",
       bgColor: "bg-green-50",
+      borderColor: "border-green-200",
       iconBgColor: "bg-white",
       textColor: "text-gray-900",
       trend: "847 online",
@@ -186,6 +188,7 @@ function StatsCards({ data }) {
       value: data?.sessionsThisMonth ? data.sessionsThisMonth.toLocaleString() : "3,040",
       subtitle: "Sessions This Month",
       bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
       iconBgColor: "bg-white", 
       textColor: "text-gray-900",
       trend: "47 live",
@@ -201,6 +204,7 @@ function StatsCards({ data }) {
       value: data?.totalTutors ? data.totalTutors.toString() : "275",
       subtitle: "Total Tutors",
       bgColor: "bg-orange-50",
+      borderColor: "border-orange-200",
       iconBgColor: "bg-white",
       textColor: "text-gray-900", 
       trend: "251 verified",
@@ -216,7 +220,7 @@ function StatsCards({ data }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {stats.map((stat, index) => (
-        <div key={index} className={`${stat.bgColor} rounded-xl p-6 border border-gray-100 shadow-sm`}>
+        <div key={index} className={`${stat.bgColor} ${stat.borderColor} border rounded-xl p-6 shadow-sm`}>
           <div className="flex items-center justify-between mb-4">
             <div className={`${stat.iconBgColor} p-3 rounded-lg`}>
               {stat.icon}
