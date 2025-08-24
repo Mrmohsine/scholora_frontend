@@ -53,29 +53,26 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   return (
     <div className="flex flex-col h-full bg-white shadow-lg">
-     {/* Logo centré */}
-    {/* Logo centré et grand */}
-<div className="flex items-center justify-center border-b border-gray-200 relative">
-  <Image
-    src="/images/logos/logo_blue.png"
-    alt="Scholora Logo"
-    width={150}   // très large
-    height={150}  // garde proportion carré
-    className="rounded-lg"
-  />
+      {/* Logo */}
+      <div className="flex items-center justify-center border-b border-gray-200" style={{ height: 100 }}>
+        <Image
+          src="/images/logos/logo_blue.png"
+          alt="Scholora Logo"
+          width={150}
+          height={40}
+          className="object-contain"
+        />
 
-  {/* Bouton fermer pour mobile */}
-  <button
-    onClick={onClose}
-    className="absolute right-4 top-1/2 -translate-y-1/2 lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-  >
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </button>
-</div>
-
-
+        {/* Bouton fermer pour mobile */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-1/2 -translate-y-1/2 lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
       {/* Navigation principale */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
