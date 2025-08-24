@@ -51,7 +51,13 @@ export default function DashboardPage() {
         </div>
         
         <div className="text-right">
-          <p className="text-sm text-gray-500">Wednesday, August 20, 2025</p>
+          <p 
+            className="text-sm text-gray-500" 
+            style={{ color: "black", fontWeight: 500, fontFamily: "system-ui" }}
+          >
+            Wednesday, August 20, 2025
+          </p>
+
           <p className="text-xs text-gray-400">Last updated: just now</p>
         </div>
       </div>
