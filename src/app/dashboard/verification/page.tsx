@@ -110,7 +110,7 @@ function ApplicationCard({ application, onApprove, onReject }: {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 mb-4">
+    <div className="bg-white rounded-lg border border-gray-300 p-6 mb-4">
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4">
           {/* Avatar */}
@@ -134,27 +134,27 @@ function ApplicationCard({ application, onApprove, onReject }: {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Subjects:</span> {application.subjects.join(', ')}
+                  <span className="font-bold text-gray-900">Subjects:</span> {application.subjects.join(', ')}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Experience:</span> {application.experience}
+                  <span className="font-bold text-gray-900">Experience:</span> {application.experience}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Education:</span> {application.education}
+                  <span className="font-bold text-gray-900">Education:</span> {application.education}
                 </p>
                 <p className="text-sm text-gray-600">
-                  <span className="font-medium">Applied:</span> {application.appliedDate}
+                  <span className="font-bold text-gray-900">Applied:</span> {application.appliedDate}
                 </p>
               </div>
             </div>
 
             <div className="mb-4">
-              <span className="text-sm text-gray-600 font-medium">Documents: </span>
+              <span className="text-sm font-bold text-gray-900">Documents: </span>
               <div className="inline-flex space-x-2">
                 {application.documents.map((doc, index) => (
-                  <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                  <span key={index} className="px-2 py-1 bg-gray-100 text-gray-900 text-xs rounded">
                     {doc}
                   </span>
                 ))}
@@ -165,7 +165,7 @@ function ApplicationCard({ application, onApprove, onReject }: {
 
         {/* Actions */}
         <div className="flex items-center space-x-2">
-          <button className="flex items-center px-3 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
+          <button className="flex items-center px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 text-sm">
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -175,21 +175,22 @@ function ApplicationCard({ application, onApprove, onReject }: {
           <button 
             onClick={() => onApprove(application.id)}
             className="flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm"
-          >
+            >
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Approve
-          </button>
-          <button 
+            </button>
+            <button 
             onClick={() => onReject(application.id)}
             className="flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
-          >
+            >
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 9l-6 6m0-6l6 6" />
             </svg>
             Reject
-          </button>
+        </button>
         </div>
       </div>
     </div>
@@ -277,7 +278,7 @@ export default function VerificationPage() {
         </div>
 
         {/* Pending Applications Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="bg-white rounded-xl shadow-sm border border-blue-200">
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Pending Applications</h2>
             <p className="text-sm text-gray-600 mt-1">Tutor applications requiring review</p>
