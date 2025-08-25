@@ -179,13 +179,13 @@ function StudentsTable({ students, loading }: { students: Student[]; loading: bo
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Student</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Grade/Level</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Subjects</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Tutors</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Sessions</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Status</th>
-              <th className="text-left py-4 px-6 font-medium text-gray-900 text-sm">Actions</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Student</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Grade/Level</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Subjects</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Tutors</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Sessions</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Status</th>
+              <th className="text-left py-4 px-6 font-medium text-black text-xs" style={{ fontFamily: 'system-ui' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -266,7 +266,7 @@ export default function StudentsPage() {
           <div className="flex items-center space-x-3">
             <button className="flex items-center px-4 py-2 text-gray-600 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
               </svg>
               Export
             </button>
@@ -324,7 +324,9 @@ export default function StudentsPage() {
             borderColor="border-red-300"
             icon={
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L18.364 5.636M5.636 18.364l12.728-12.728" />
+                <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+                <line x1="15" y1="9" x2="9" y2="15" strokeWidth="2"/>
+                <line x1="9" y1="9" x2="15" y2="15" strokeWidth="2"/>
               </svg>
             }
           />
