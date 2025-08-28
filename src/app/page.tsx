@@ -9,6 +9,8 @@ import Footer from '@/components/layout/Footer';
 export default function HomePage() {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [currentSlide, setCurrentSlide] = useState(0);
+   const [email, setEmail] = useState("");
+   const [message, setMessage] = useState("");
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
    // Auto-scroll effect pour Success Stories - scroll continu 1 par 1
@@ -19,6 +21,36 @@ export default function HomePage() {
 
      return () => clearInterval(interval);
    }, []);
+
+
+    const handleSubscribe = async () => {
+    if (!email) {
+      setMessage("Please enter your email.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/api/newsletters", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setMessage("Subscribed successfully!");
+        setEmail("");
+      } else {
+        const data = await res.json();
+        setMessage(data.message || "Something went wrong.");
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage("Network error.");
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -588,12 +620,21 @@ export default function HomePage() {
                 <input 
                   type="email" 
                   placeholder="your email address" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 px-6 py-4 rounded-xl bg-white/10 text-white placeholder-blue-200 border-2 border-white/20 focus:outline-none focus:ring-4 focus:ring-white/30 backdrop-blur-sm font-medium"
                 />
-                <button className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg whitespace-nowrap">
+                <button 
+                  onClick={handleSubscribe}
+                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg whitespace-nowrap">
                   Subscribe
                 </button>
               </div>
+              {message && (
+                <p className="mt-4 text-sm text-white font-medium">
+                  {message}
+                </p>
+              )}
             </div>
             
             <p className="text-blue-200 text-sm">
