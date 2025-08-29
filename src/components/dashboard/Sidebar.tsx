@@ -15,7 +15,8 @@ import {
   PresentationChartLineIcon,
   CurrencyDollarIcon,
   ChatBubbleLeftEllipsisIcon,
-  CogIcon
+  CogIcon,
+  EnvelopeIcon
 } from '@heroicons/react/24/outline';
 
 interface SidebarProps {
@@ -37,6 +38,7 @@ const navigation: NavigationItem[] = [
   { name: 'Subject Performance', href: '/dashboard/subject-performance', icon: ChartBarIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: PresentationChartLineIcon },
   { name: 'Revenue', href: '/dashboard/revenue', icon: CurrencyDollarIcon },
+  { name: 'Newsletter', href: '/dashboard/newsletter', icon: EnvelopeIcon  },
   { name: 'Support', href: '/dashboard/support', icon: ChatBubbleLeftEllipsisIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
 ];
