@@ -109,7 +109,7 @@ const Header = () => {
                 className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all mx-3"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Get a Tutor
+                Become a tutor
               </Link>
             </div>
           </div>
