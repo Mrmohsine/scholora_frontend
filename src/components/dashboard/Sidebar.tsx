@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-
-// Ici, importe les icônes que tu utilises pour la navigation
 import {
   HomeIcon,
   UsersIcon,
@@ -21,6 +19,7 @@ import {
 
 interface SidebarProps {
   onClose?: () => void;
+  isCollapsed?: boolean; 
 }
 
 interface NavigationItem {
@@ -43,37 +42,35 @@ const navigation: NavigationItem[] = [
   { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
 ];
 
-export default function Sidebar({ onClose }: SidebarProps) {
+export default function Sidebar({ onClose, isCollapsed = false }: SidebarProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return pathname === '/dashboard';
-    }
+    if (href === '/dashboard') return pathname === '/dashboard';
     return pathname.startsWith(href);
   };
 
   return (
-    <div className="flex flex-col h-full bg-white shadow-lg">
+    <div className={`flex flex-col h-full bg-white shadow-lg transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`} >
       {/* Logo */}
       <div className="flex items-center justify-center border-b border-gray-200" style={{ height: 100 }}>
         <Image
           src="/images/logos/logo_blue.png"
           alt="Scholora Logo"
-          width={150}
+          width={isCollapsed ? 40 : 150} // Logo plus petit si réduit
           height={40}
           className="object-contain"
         />
 
         {/* Bouton fermer pour mobile */}
-        <button
+        {/* <button
           onClick={onClose}
           className="absolute right-4 top-1/2 -translate-y-1/2 lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
-        </button>
+        </button> */}
       </div>
 
       {/* Navigation principale */}
@@ -92,18 +89,10 @@ export default function Sidebar({ onClose }: SidebarProps) {
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
               }`}
             >
-              <Icon
-                className={`mr-3 h-5 w-5 flex-shrink-0 ${
-                  active ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'
-                }`}
-              />
-              <span className="flex-1">{item.name}</span>
-              {item.badge && (
-                <span className={`ml-3 inline-block py-0.5 px-2 text-xs rounded-full ${
-                  active
-                    ? 'bg-blue-100 text-blue-600'
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
+              <Icon className={`h-5 w-5 flex-shrink-0 ${active ? 'text-blue-500' : 'text-gray-400 group-hover:text-gray-500'}`} />
+              {!isCollapsed && <span className="flex-1 ml-3">{item.name}</span>} {/* Texte masqué si réduit */}
+              {!isCollapsed && item.badge && (
+                <span className={`ml-3 inline-block py-0.5 px-2 text-xs rounded-full ${active ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'}`}>
                   {item.badge}
                 </span>
               )}
@@ -113,23 +102,27 @@ export default function Sidebar({ onClose }: SidebarProps) {
       </nav>
 
       {/* Section utilisateur et déconnexion */}
-      <div className="border-t border-gray-200 p-4">
-        <Link
-          href="/auth/logout"
-          className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-red-50 hover:text-red-700 transition-colors duration-200"
-        >
-          <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-red-500" />
-          <span>Déconnexion</span>
-        </Link>
-      </div>
+      {!isCollapsed && (
+        <div className="border-t border-gray-200 p-4">
+          <Link
+            href="/auth/logout"
+            className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-red-50 hover:text-red-700 transition-colors duration-200"
+          >
+            <ArrowRightOnRectangleIcon className="mr-3 h-5 w-5 text-gray-400 group-hover:text-red-500" />
+            <span>Déconnexion</span>
+          </Link>
+        </div>
+      )}
 
       {/* Informations version */}
-      <div className="p-4 border-t border-gray-200">
-        <div className="text-xs text-gray-500 text-center">
-          <p>Scholora Dashboard</p>
-          <p>Version 1.0.0</p>
+      {!isCollapsed && (
+        <div className="p-4 border-t border-gray-200">
+          <div className="text-xs text-gray-500 text-center">
+            <p>Scholora Dashboard</p>
+            <p>Version 1.0.0</p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
