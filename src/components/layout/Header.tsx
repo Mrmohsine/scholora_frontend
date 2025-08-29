@@ -59,10 +59,10 @@ const Header = () => {
               Log in
             </Link>
             <Link
-              href="/auth/register"
+              href="/become-tutor"
               className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm"
             >
-              Get a Tutor
+              Become a tutor
             </Link>
           </div>
 
@@ -105,7 +105,7 @@ const Header = () => {
                 Log in
               </Link>
               <Link
-                href="/auth/register"
+                href="/become-tutor"
                 className="block bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-semibold transition-all mx-3"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
