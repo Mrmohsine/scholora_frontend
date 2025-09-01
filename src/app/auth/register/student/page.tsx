@@ -6,8 +6,9 @@ import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
-export default function LoginPage() {
+export default function StudentSignUpPage() {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
     rememberMe: false
@@ -16,7 +17,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login:', formData);
+    console.log('Student signup:', formData);
   };
 
   return (
@@ -25,21 +26,16 @@ export default function LoginPage() {
       
       <div className="flex items-center justify-center min-h-[80vh] p-4">
         <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-8 w-full max-w-md">
-          {/* Title */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-3">Log in</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">Sign up as a student</h1>
             <p className="text-gray-600 text-sm">
-              <Link href="/auth/register/student" className="text-blue-600 hover:underline">
-                Sign up as a student
-              </Link>
-              {' '}or{' '}
-              <Link href="/auth/register/tutor" className="text-blue-600 hover:underline">
-                Sign up as a tutor
+              Already have an account?{' '}
+              <Link href="/auth/login" className="text-blue-600 hover:underline">
+                Log in
               </Link>
             </p>
           </div>
 
-          {/* Social Auth Buttons */}
           <div className="space-y-3 mb-6">
             <button className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <span className="text-red-500 font-bold">G</span>
@@ -50,17 +46,23 @@ export default function LoginPage() {
               <span className="text-blue-600 font-bold">f</span>
               <span className="font-medium text-gray-700">Continue with Facebook</span>
             </button>
-            
-            <button className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-black font-bold">🍎</span>
-              <span className="font-medium text-gray-700">Continue with Apple</span>
-            </button>
           </div>
 
           <div className="text-center text-gray-500 text-sm mb-6">or</div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">Name</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                placeholder="Your name"
+                required
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">Email</label>
               <input
@@ -94,12 +96,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="text-left">
-              <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">
-                Forgot your password?
-              </Link>
-            </div>
-
             <div className="flex items-center">
               <input
                 type="checkbox"
@@ -117,16 +113,22 @@ export default function LoginPage() {
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
             >
-              Log in
+              Sign up
             </button>
           </form>
 
           <div className="text-center text-xs text-gray-500 mt-6">
-            By clicking Log in or Continue with, you agree to Preply{' '}
+            By clicking Continue or Sign up, you agree to Scholora{' '}
             <Link href="/terms" className="text-blue-600 hover:underline">Terms of Use</Link>
+            , including{' '}
+            <Link href="/subscription-terms" className="text-blue-600 hover:underline">Subscription Terms</Link>
             {' '}and{' '}
             <Link href="/privacy" className="text-blue-600 hover:underline">Privacy Policy</Link>
           </div>
+
+          <button className="absolute bottom-4 right-4 w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
+            ?
+          </button>
         </div>
       </div>
       
