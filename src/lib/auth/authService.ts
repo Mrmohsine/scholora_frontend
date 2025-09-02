@@ -3,118 +3,137 @@ import { AUTH_CONFIG, API_ENDPOINTS } from './config';
 import type { LoginRequest, LoginResponse, DashboardResponse, User } from '../../types/auth';
 
 class AuthService {
-  private apiClient: typeof fetch;
+ private async makeRequest<T>(
+   endpoint: string,
+   options: RequestInit = {}
+ ): Promise<T> {
+   const url = `${AUTH_CONFIG.API_BASE_URL}${endpoint}`;
+   const token = this.getToken();
 
-  constructor() {
-    this.apiClient = fetch;
-  }
+   const config: RequestInit = {
+     headers: {
+       'Content-Type': 'application/json',
+       'Accept': 'application/json',
+       ...(token && { Authorization: `Bearer ${token}` }),
+       ...options.headers,
+     },
+     ...options,
+   };
 
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${AUTH_CONFIG.API_BASE_URL}${endpoint}`;
-    const token = this.getToken();
+   try {
+     const response = await fetch(url, config);
 
-    const config: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers,
-      },
-      ...options,
-    };
+     if (!response.ok) {
+       const errorData = await response.json().catch(() => ({}));
+       throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+     }
 
-    try {
-      const response = await this.apiClient(url, config);
+     return await response.json();
+   } catch (error) {
+     if (error instanceof Error) {
+       throw error;
+     }
+     throw new Error('Network error occurred');
+   }
+ }
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
+ async login(credentials: LoginRequest): Promise<LoginResponse> {
+   const response = await this.makeRequest<LoginResponse>(
+     API_ENDPOINTS.LOGIN,
+     {
+       method: 'POST',
+       body: JSON.stringify(credentials),
+     }
+   );
 
-      return await response.json();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error;
-      }
-      throw new Error('Network error occurred');
-    }
-  }
+   if (response.success) {
+     this.setToken(response.data.access_token);
+     this.setUser(response.data.user);
+   }
 
-  async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await this.makeRequest<LoginResponse>(
-      API_ENDPOINTS.LOGIN,
-      {
-        method: 'POST',
-        body: JSON.stringify(credentials),
-      }
-    );
+   return response;
+ }
 
-    if (response.success && response.data.user.is_super_admin) {
-      this.setToken(response.data.access_token);
-      this.setUser(response.data.user);
-    }
+ async logout(): Promise<void> {
+   try {
+     await this.makeRequest(API_ENDPOINTS.LOGOUT, { method: 'POST' });
+   } catch (error) {
+     console.warn('Logout API call failed:', error);
+   } finally {
+     this.clearAuth();
+   }
+ }
 
-    return response;
-  }
+ async getDashboard(): Promise<DashboardResponse> {
+   return this.makeRequest<DashboardResponse>(API_ENDPOINTS.ADMIN_DASHBOARD);
+ }
 
-  async logout(): Promise<void> {
-    try {
-      await this.makeRequest(API_ENDPOINTS.LOGOUT, { method: 'POST' });
-    } catch (error) {
-      console.warn('Logout API call failed:', error);
-    } finally {
-      this.clearAuth();
-    }
-  }
+ async getCurrentUser(): Promise<User> {
+   const response = await this.makeRequest<{ success: boolean; data: User }>(
+     API_ENDPOINTS.ME
+   );
+   return response.data;
+ }
 
-  async getDashboard(): Promise<DashboardResponse> {
-    return this.makeRequest<DashboardResponse>(API_ENDPOINTS.ADMIN_DASHBOARD);
-  }
+ getToken(): string | null {
+   if (typeof window === 'undefined') return null;
+   return localStorage.getItem(AUTH_CONFIG.TOKEN_KEY);
+ }
 
-  async getCurrentUser(): Promise<User> {
-    const response = await this.makeRequest<{ success: boolean; data: User }>(
-      API_ENDPOINTS.ME
-    );
-    return response.data;
-  }
+ private setToken(token: string): void {
+   if (typeof window === 'undefined') return;
+   localStorage.setItem(AUTH_CONFIG.TOKEN_KEY, token);
+ }
 
-  // Token management
-  getToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem(AUTH_CONFIG.TOKEN_KEY);
-  }
+ getUser(): User | null {
+   if (typeof window === 'undefined') return null;
+   const userData = localStorage.getItem(AUTH_CONFIG.USER_KEY);
+   return userData ? JSON.parse(userData) : null;
+ }
 
-  private setToken(token: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(AUTH_CONFIG.TOKEN_KEY, token);
-  }
+ private setUser(user: User): void {
+   if (typeof window === 'undefined') return;
+   localStorage.setItem(AUTH_CONFIG.USER_KEY, JSON.stringify(user));
+ }
 
-  getUser(): User | null {
-    if (typeof window === 'undefined') return null;
-    const userData = localStorage.getItem(AUTH_CONFIG.USER_KEY);
-    return userData ? JSON.parse(userData) : null;
-  }
+ clearAuth(): void {
+   if (typeof window === 'undefined') return;
+   localStorage.removeItem(AUTH_CONFIG.TOKEN_KEY);
+   localStorage.removeItem(AUTH_CONFIG.USER_KEY);
+   localStorage.removeItem(AUTH_CONFIG.REFRESH_TOKEN_KEY);
+ }
 
-  private setUser(user: User): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem(AUTH_CONFIG.USER_KEY, JSON.stringify(user));
-  }
+ isAuthenticated(): boolean {
+   const token = this.getToken();
+   const user = this.getUser();
+   return !!(token && user);
+ }
 
-  clearAuth(): void {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(AUTH_CONFIG.TOKEN_KEY);
-    localStorage.removeItem(AUTH_CONFIG.USER_KEY);
-    localStorage.removeItem(AUTH_CONFIG.REFRESH_TOKEN_KEY);
-  }
+ getUserRole(): string | null {
+   const user = this.getUser();
+   if (!user || !user.roles || user.roles.length === 0) return null;
+   
+   if (user.roles.includes('super_admin')) return 'super_admin';
+   if (user.roles.includes('tutor')) return 'tutor';
+   if (user.roles.includes('student')) return 'student';
+   
+   return user.roles[0];
+ }
 
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    const user = this.getUser();
-    return !!(token && user?.is_super_admin);
-  }
+ getRedirectPath(): string {
+   const role = this.getUserRole();
+   
+   switch (role) {
+     case 'super_admin':
+       return '/admin/dashboard';
+     case 'tutor':
+       return '/tutor-portal/dashboard';
+     case 'student':
+       return '/student-portal/dashboard';
+     default:
+       return '/';
+   }
+ }
 }
 
 export const authService = new AuthService();

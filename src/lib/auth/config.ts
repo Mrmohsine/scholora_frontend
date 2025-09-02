@@ -1,5 +1,6 @@
 // Configuration de base pour l'authentification
 export const AUTH_CONFIG = {
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
   TOKEN_KEY: 'auth_token',
   USER_KEY: 'auth_user',
   REFRESH_TOKEN_KEY: 'refresh_token',
@@ -13,33 +14,38 @@ export const AUTH_CONFIG = {
 };
 
 // URL de base de l'API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = AUTH_CONFIG.API_BASE_URL;
 
 // Endpoints de l'API
 export const API_ENDPOINTS = {
   // Authentification
-  LOGIN: `${API_BASE_URL}/auth/login`,
-  LOGOUT: `${API_BASE_URL}/auth/logout`,
-  REGISTER: `${API_BASE_URL}/auth/register`,
-  REFRESH: `${API_BASE_URL}/auth/refresh`,
-  ME: `${API_BASE_URL}/auth/me`,
-  FORGOT_PASSWORD: `${API_BASE_URL}/auth/forgot-password`,
-  RESET_PASSWORD: `${API_BASE_URL}/auth/reset-password`,
-  VERIFY_EMAIL: `${API_BASE_URL}/auth/verify-email`,
+  LOGIN: `/auth/login`,
+  LOGOUT: `/auth/logout`,
+  REGISTER: `/auth/register`,
+  REFRESH: `/auth/refresh`,
+  ME: `/auth/me`,
+  FORGOT_PASSWORD: `/auth/forgot-password`,
+  RESET_PASSWORD: `/auth/reset-password`,
+  VERIFY_EMAIL: `/auth/verify-email`,
   
   // Dashboard
-  DASHBOARD: `${API_BASE_URL}/dashboard`,
-  DASHBOARD_STATS: `${API_BASE_URL}/dashboard/stats`,
+  ADMIN_DASHBOARD: `/admin/dashboard`,
+  STUDENT_DASHBOARD: `/student/dashboard`,
+  TUTOR_DASHBOARD: `/tutor/dashboard`,
+  DASHBOARD_STATS: `/dashboard/stats`,
   
   // Utilisateurs
-  USERS: `${API_BASE_URL}/users`,
-  USER_PROFILE: `${API_BASE_URL}/users/profile`,
+  USERS: `/users`,
+  USER_PROFILE: `/users/profile`,
+  ADMIN_USERS: `/admin/users`,
+  ADMIN_ROLES: `/admin/roles`,
   
-  // Autres endpoints que vous pourriez avoir
-  STUDENTS: `${API_BASE_URL}/students`,
-  TEACHERS: `${API_BASE_URL}/teachers`,
-  COURSES: `${API_BASE_URL}/courses`,
-  CLASSES: `${API_BASE_URL}/classes`,
+  // Autres endpoints
+  STUDENTS: `/students`,
+  TUTORS: `/tutors`,
+  COURSES: `/courses`,
+  CLASSES: `/classes`,
+  USER_STATS: `/user-stats`,
 };
 
 // Configuration des headers par défaut
