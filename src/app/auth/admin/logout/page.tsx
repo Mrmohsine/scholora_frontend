@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authService } from '../../../lib/auth/authService';
+import { authService } from '../../../../lib/auth/authService';
 
 export default function LogoutPage() {
   const [status, setStatus] = useState<'logging-out' | 'success' | 'error'>('logging-out');
