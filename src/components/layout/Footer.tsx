@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
   const footerSections = [
@@ -33,14 +34,17 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand Section */}
-          <div>
-            <div className="flex items-center mb-6">
-              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mr-3">
-                <span className="text-white font-bold text-xl">S</span>
-              </div>
-              <span className="text-2xl font-bold text-white">Scholora</span>
+          <div  className="-mt-[85px]">
+            <div className="flex items-center mb-6 -ml-[30px]">
+              <Image
+              src="/images/logos/logo_blue.png"
+              alt="Scholora Logo"
+              width={200}
+              height={320}
+              className="rounded-lg invert brightness-0"
+            />
             </div>
-            <p className="text-gray-400 mb-6 leading-relaxed">
+            <p className="text-gray-400 leading-relaxed -mt-[85px]">
               Connecting students across Morocco with expert tutors for academic excellence.
             </p>
           </div>
