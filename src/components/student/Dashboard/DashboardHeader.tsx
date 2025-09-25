@@ -30,26 +30,22 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
-        {/* Title Section */}
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 text-sm">Welcome back! Here's your learning overview</p>
-        </div>
-
-        {/* Right Section */}
-        <div className="flex items-center space-x-4">
-          {/* Search */}
-          <div className="relative">
+        {/* Center Section - Search */}
+        <div className="flex-1 flex justify">
+          <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none placeholder-gray-900"
             />
           </div>
+        </div>
 
+        {/* Right Section - Icons */}
+        <div className="flex items-center space-x-4">
           {/* Notifications */}
           <div className="relative">
             <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">

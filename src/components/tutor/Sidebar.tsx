@@ -1,6 +1,6 @@
 // components/tutor/Sidebar.tsx
 'use client';
-
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
@@ -37,14 +37,18 @@ export default function TutorSidebar() {
  return (
    <div className="flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen">
      {/* Logo */}
-     <div className="flex items-center px-6 py-4 border-b border-gray-200">
-       <div className="flex items-center">
-         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-           <span className="text-white font-bold text-sm">S</span>
-         </div>
-         <span className="ml-3 text-xl font-semibold text-gray-900">Scholora</span>
-       </div>
-     </div>
+    <div className="flex items-center px-6 border-b border-gray-200">
+        <Link href="/" className="flex items-center">
+          <Image
+        src="/images/logos/logo_blue.png"
+        alt="Scholora Logo"
+        width={200}
+        height={320}
+        className="w-auto p-0"
+        style={{ margin: '-50px 0' }}
+      />
+      </Link>
+    </div>
 
      {/* Navigation */}
      <nav className="flex-1 px-4 py-6 space-y-2">
