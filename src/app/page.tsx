@@ -13,15 +13,51 @@ export default function HomePage() {
    const [message, setMessage] = useState("");
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
-   // Auto-scroll effect pour Success Stories - scroll continu 1 par 1
+   // Countdown Timer State
+   const [timeLeft, setTimeLeft] = useState({
+     days: 89,
+     hours: 14,
+     minutes: 27,
+     seconds: 26
+   });
+
+   // Auto-scroll effect pour Success Stories
    useEffect(() => {
      const interval = setInterval(() => {
-       setCurrentSlide((prev) => (prev + 1) % 7); // 7 positions de scroll possibles
-     }, 3000); // Change slide every 3 seconds
+       setCurrentSlide((prev) => (prev + 1) % 9);
+     }, 3000);
 
      return () => clearInterval(interval);
    }, []);
 
+   // Countdown Timer Effect
+   useEffect(() => {
+     const timer = setInterval(() => {
+       setTimeLeft(prevTime => {
+         let { days, hours, minutes, seconds } = prevTime;
+         
+         if (seconds > 0) {
+           seconds--;
+         } else if (minutes > 0) {
+           minutes--;
+           seconds = 59;
+         } else if (hours > 0) {
+           hours--;
+           minutes = 59;
+           seconds = 59;
+         } else if (days > 0) {
+           days--;
+           hours = 23;
+           minutes = 59;
+           seconds = 59;
+         }
+         
+         return { days, hours, minutes, seconds };
+       });
+     }, 1000);
+
+     return () => clearInterval(timer);
+   }, []);
 
     const handleSubscribe = async () => {
     if (!email) {
@@ -51,69 +87,99 @@ export default function HomePage() {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-white font-sans">
       <Header />
 
+      {/* Countdown Timer Section */}
+      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-16 overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="mb-6">
+              <h3 className="text-2xl font-semibold text-gray-700 mb-2">
+                ⚡ Neural Networks Activating ⚡
+              </h3>
+              <p className="text-base text-gray-600">
+                Until the learning revolution begins
+              </p>
+            </div>
+            
+            <div className="flex justify-center gap-3 mb-8">
+              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
+                <div className="text-2xl font-bold">{timeLeft.days.toString().padStart(2, '0')}</div>
+                <div className="text-xs uppercase text-gray-300">DAYS</div>
+              </div>
+              
+              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
+                <div className="text-2xl font-bold">{timeLeft.hours.toString().padStart(2, '0')}</div>
+                <div className="text-xs uppercase text-gray-300">HOURS</div>
+              </div>
+              
+              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
+                <div className="text-2xl font-bold">{timeLeft.minutes.toString().padStart(2, '0')}</div>
+                <div className="text-xs uppercase text-gray-300">MIN</div>
+              </div>
+              
+              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
+                <div className="text-2xl font-bold">{timeLeft.seconds.toString().padStart(2, '0')}</div>
+                <div className="text-xs uppercase text-gray-300">SEC</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-24 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <div className="mb-8">
-              <span className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium border border-blue-200">
-                🎓 Revolutionizing Education in Morocco
+      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-16 overflow-hidden">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center">
+            <div className="mb-6">
+              <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                🚀 Revolutionary Learning Platform
               </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 mb-8 leading-tight tracking-tight">
-              Where <span className="text-blue-600 relative">
-                Learning Meets
-                <svg className="absolute -bottom-3 left-0 w-full h-4 text-blue-200 opacity-60" viewBox="0 0 300 12" fill="currentColor">
-                  <path d="M0,8 Q150,0 300,8 L300,12 L0,12 Z"/>
-                </svg>
-              </span><br />
-              <span className="text-gray-900">Possibility</span>
+
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Where <span className="text-blue-500">Learning</span> Meets Possibility
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
-              Connect with verified tutors across Morocco. Personalized learning experiences that 
-              adapt to your pace, schedule, and goals. Join thousands of successful students.
+            
+            <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Connect with world-class tutors across Morocco. Personalized learning experiences that adapt to your pace, schedule, and goals. Join thousands of successful learners who are already transforming their futures.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20">
-              <Link href="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold px-10 py-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                Find Your Tutor
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 items-center">
+              <Link href="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200">
+                Get Early Access
               </Link>
-              <button 
-               onClick={() => setIsModalOpen(true)}
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 text-lg font-semibold px-10 py-4 rounded-xl flex items-center justify-center transition-all duration-200 transform hover:scale-105">
-                <Play className="w-5 h-5 mr-3 fill-current" />
-                Watch Demo
-              </button>
-              
+              <div className="flex items-center gap-2">
+                <Play className="w-4 h-4 text-gray-600" />
+                <input 
+                  type="email" 
+                  placeholder="Entrez votre email" 
+                  className="border border-gray-300 text-gray-700 font-medium px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[220px] text-sm"
+                />
+              </div>
             </div>
 
             {/* Modal for Video Demo */}
             {isModalOpen && (
               <div
                 className="fixed inset-0 flex items-center justify-center z-50"
-                style={{ backgroundColor: "rgba(102, 98, 98, 0.53)" }} 
+                style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} 
                 onClick={() => setIsModalOpen(false)} 
               >
-                {/* Bouton de fermeture */}
-                  <button
-                    onClick={() => setIsModalOpen(false)}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl font-bold"
-                  >
-                    ✕
-                  </button>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl font-bold"
+                >
+                  ✕
+                </button>
                 <div
                   className="bg-transparent rounded-lg p-6 w-full relative"
                   style={{ maxWidth: "75%" }} 
                   onClick={(e) => e.stopPropagation()} 
                 >
-                  
-
-                  {/* Vidéo */}
-                  <video controls autoPlay  className="w-full h-auto rounded-lg">
+                  <video controls autoPlay className="w-full h-auto rounded-lg">
                     <source src={videoUrl} type="video/mp4" />
                     Votre navigateur ne supporte pas la balise vidéo.
                   </video>
@@ -122,101 +188,38 @@ export default function HomePage() {
             )}
             
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mb-20">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-3 tracking-tight">1,500+</div>
-                <div className="text-gray-600 font-medium text-lg">Verified Tutors</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">1,500+</div>
+                <div className="text-sm text-gray-600">Students</div>
+                <div className="text-xs text-gray-500">Online Students</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-3 tracking-tight">25k+</div>
-                <div className="text-gray-600 font-medium text-lg">Students</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">25k+</div>
+                <div className="text-sm text-gray-600">Courses</div>
+                <div className="text-xs text-gray-500">Available courses</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-3 tracking-tight">98%</div>
-                <div className="text-gray-600 font-medium text-lg">Success Rate</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">98%</div>
+                <div className="text-sm text-gray-600">Success Rate</div>
+                <div className="text-xs text-gray-500">Success rate</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-3 tracking-tight">50+</div>
-                <div className="text-gray-600 font-medium text-lg">Subjects</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">50+</div>
+                <div className="text-sm text-gray-600">Years</div>
+                <div className="text-xs text-gray-500">Expert experience</div>
               </div>
             </div>
-          </div>
-          
-          {/* Dashboard Preview */}
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl p-8 lg:p-12 shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
-              <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-xl">
-                {/* Browser Bar */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-md">
-                      <span className="text-white font-bold text-xl">S</span>
-                    </div>
-                    <span className="font-bold text-gray-900 text-lg">Scholora Drive</span>
-                  </div>
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  </div>
-                </div>
-                
-                {/* Dashboard Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Sidebar */}
-                  <div className="lg:col-span-1">
-                    <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                      <div className="text-sm font-bold text-gray-700 mb-6 uppercase tracking-wide">My Stats</div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600 font-medium">Sessions</span>
-                          <span className="text-gray-900 font-bold text-lg">24</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600 font-medium">Hours</span>
-                          <span className="text-gray-900 font-bold text-lg">48h</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-600 font-medium">Progress</span>
-                          <div className="flex items-center">
-                            <span className="text-gray-900 font-bold text-lg mr-3">85%</span>
-                            <div className="w-16 h-3 bg-gray-200 rounded-full overflow-hidden">
-                              <div className="w-14 h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Main Content */}
-                  <div className="lg:col-span-2">
-                    <div className="grid grid-cols-2 gap-6 mb-6">
-                      <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
-                        <div className="text-3xl font-bold text-blue-600 mb-2">5.0</div>
-                        <div className="text-gray-600 font-medium mb-2">Average Rating</div>
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
-                        <div className="text-3xl font-bold text-green-600 mb-2">6.5/9</div>
-                        <div className="text-gray-600 font-medium mb-1">IELTS Score</div>
-                        <div className="text-xs text-green-600 font-semibold">+1.5 improvement</div>
-                      </div>
-                    </div>
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
-                      <div className="text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">Next Session</div>
-                      <div className="text-xl font-bold text-gray-900 mb-2">Mathematics with Amira</div>
-                      <div className="flex items-center text-gray-600">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        <span className="font-medium">Tomorrow, 2:00 PM</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
+            {/* Additional Stats Row */}
+            <div className="grid grid-cols-2 gap-8 max-w-md mx-auto mb-16">
+              <div className="bg-blue-100 rounded-lg p-4 text-center">
+                <div className="text-blue-600 text-2xl font-bold">3166</div>
+                <div className="text-xs text-gray-600">Mind Being Replaced</div>
+              </div>
+              <div className="bg-purple-100 rounded-lg p-4 text-center">
+                <div className="text-purple-600 text-2xl font-bold">150</div>
+                <div className="text-xs text-gray-600">Mental Rewarding Testing</div>
               </div>
             </div>
           </div>
@@ -268,200 +271,320 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Our Team - Featured Tutors */}
-      <section id="tutors" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-gray-900 mb-6 tracking-tight">Our team</h2>
-            <h3 className="text-3xl font-semibold text-gray-700 mb-6">Meet our top-rated tutors</h3>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Get to know some of our best tutors carefully curated from various Moroccan universities.
+      {/* Meet our world-class experts */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
+                Coming Soon
+              </span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Meet our world-class experts</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              We're assembling an extraordinary team of educators, innovators, and subject matter experts. Their identities will be revealed when we launch - but their expertise is already legendary.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           {/* Tutor 1 - Amira Bennaceur */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
-              {/* Photo réelle */}
-              <div className="mb-6">
-                <div className="w-full h-64 rounded-xl mb-4 overflow-hidden">
-                  <img 
-                    src="/images/tutors/pic.jpg" 
-                    alt="Amira Bennaceur - Mathematics Tutor"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-gray-900">Amira Bennaceur</h3>
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current mr-1" />
-                    <span className="text-gray-600 font-semibold">4.9</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {/* Expert 1 - AI & Machine Learning */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-purple-400 flex items-center justify-center relative">
+                  <span className="text-2xl text-gray-400">?</span>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">!</span>
                   </div>
                 </div>
               </div>
               
-              <div className="mb-6">
-                <div className="text-blue-600 font-bold text-xl mb-4">Mathematics</div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Algebra</span>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Calculus</span>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Geometry</span>
-                </div>
-                <div className="flex items-center justify-between text-gray-600 font-medium mb-4">
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <span>95 students</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span>12+ years</span>
-                  </div>
-                </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">AI & Machine Learning Expert</h3>
+              <div className="text-sm text-gray-600 mb-1">15+ years experience</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">Former Google AI Researcher</div>
+              
+              <div className="flex justify-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                ))}
+                <span className="ml-1 text-sm text-gray-600">(5.0)</span>
               </div>
               
-              <div className="flex items-center justify-between">
-                <span className="text-xl text-blue-600">200 MAD/hour</span>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                  View Profile
-                </button>
-              </div>
-            </div>
-            {/* Tutor 2 - Youssef El Mansouri */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
-              {/* Photo réelle */}
-              <div className="mb-6">
-                <div className="w-full h-64 rounded-xl mb-4 overflow-hidden">
-                  <img 
-                    src="/images/tutors/pic.jpg" 
-                    alt="Amira Bennaceur - Mathematics Tutor"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-gray-900">Youssef El Mansouri</h3>
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current mr-1" />
-                    <span className="text-gray-600 font-semibold">4.8</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <div className="text-blue-600 font-bold text-xl mb-4">Physics</div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Mechanics</span>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Electricity</span>
-                </div>
-                <div className="flex items-center justify-between text-gray-600 font-medium mb-4">
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <span>78 students</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span>8+ years</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <span className="text-xl text-blue-600">180 MAD/hour</span>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                  View Profile
-                </button>
-              </div>
+              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                <span className="mr-2">🔒</span>
+                Reveal Identity
+                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+              </button>
             </div>
 
-            {/* Tutor 3 - Salma Alaoui */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300">
-              {/* Photo réelle */}
-              <div className="mb-6">
-                <div className="w-full h-64 rounded-xl mb-4 overflow-hidden">
-                  <img 
-                    src="/images/tutors/pic.jpg" 
-                    alt="Amira Bennaceur - Mathematics Tutor"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-gray-900">Salma Alaoui</h3>
-                  <div className="flex items-center">
-                    <Star className="w-5 h-5 text-yellow-400 fill-current mr-1" />
-                    <span className="text-gray-600 font-semibold">5.0</span>
+            {/* Expert 2 - Advanced Mathematics */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-cyan-400 flex items-center justify-center relative">
+                  <span className="text-2xl text-gray-400">?</span>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">!</span>
                   </div>
                 </div>
               </div>
               
-              <div className="mb-6">
-                <div className="text-blue-600 font-bold text-xl mb-4">Literature</div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">French</span>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Arabic</span>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">Writing</span>
-                </div>
-                <div className="flex items-center justify-between text-gray-600 font-medium mb-4">
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <span>124 students</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    <span>12+ years</span>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Advanced Mathematics Expert</h3>
+              <div className="text-sm text-gray-600 mb-1">12+ years experience</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">MIT Mathematics Professor</div>
+              
+              <div className="flex justify-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                ))}
+                <span className="ml-1 text-sm text-gray-600">(4.9)</span>
+              </div>
+              
+              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                <span className="mr-2">🔒</span>
+                Reveal Identity
+                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+              </button>
+            </div>
+
+            {/* Expert 3 - Language Mastery */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
+              <div className="relative mb-6">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-pink-400 flex items-center justify-center relative">
+                  <span className="text-2xl text-gray-400">?</span>
+                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">!</span>
                   </div>
                 </div>
               </div>
               
-              <div className="flex items-center justify-between">
-                <span className="text-xl text-blue-600">220 MAD/hour</span>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                  View Profile
-                </button>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Language Mastery Expert</h3>
+              <div className="text-sm text-gray-600 mb-1">20+ years experience</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">Polyglot & UN Translator</div>
+              
+              <div className="flex justify-center mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                ))}
+                <span className="ml-1 text-sm text-gray-600">(5.0)</span>
               </div>
+              
+              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                <span className="mr-2">🔒</span>
+                Reveal Identity
+                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+              </button>
             </div>
           </div>
-          
-          <div className="text-center mt-16">
-            <Link href="/public/tutors-list" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-10 py-4 rounded-xl font-bold text-lg transition-all duration-200 transform hover:scale-105">
-              Browse all tutors
-            </Link>
+
+          {/* 47+ More Experts */}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900 mb-2">47+ More Experts</div>
+            <p className="text-sm text-gray-600 mb-2">We're onboarding world-class educators across every subject imaginable.</p>
+            <p className="text-sm text-gray-600">Their profiles unlock when we launch.</p>
           </div>
         </div>
       </section>
 
-      {/* What students are learning now */}
-      <section id="subjects" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-bold text-gray-900 mb-6 tracking-tight">What students are learning now</h2>
+      {/* Whispers about our experts */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-600 rounded-full text-sm font-medium">
+                What People Are Saying
+              </span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Whispers about our experts</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Word travels fast in academic circles. Here's what industry leaders are quietly saying about the team we're assembling.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {/* Row 1 */}
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "I heard they recruited someone from OpenAI at a crazy level. Absolutely brilliant."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Industry Insider</div>
+                  <div className="text-xs text-gray-500">Former Yahoo/Google</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "The mathematics expert they recruited? Former MIT that recruited us."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Academic Colleague</div>
+                  <div className="text-xs text-gray-500">XYZ Academy</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "Their language specialist speaks 12 languages fluently. We've never seen anything like it."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Industry Insider</div>
+                  <div className="text-xs text-gray-500">UN Translation</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "The physics expert they recruited? Former NASA. That's all I can say publicly."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Academic Colleague</div>
+                  <div className="text-xs text-gray-500">Research Institution</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "Their computer science expert? Solved. His platform and big top-level colleagues."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Valley Insider</div>
+                  <div className="text-xs text-gray-500">Big Tech Senior</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <div className="flex items-start mb-4">
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white font-bold">?</span>
+                </div>
+                <div>
+                  <blockquote className="text-sm text-gray-700 italic mb-2">
+                    "I've been in education for 30 years. This team they're building is unprecedented."
+                  </blockquote>
+                  <div className="text-xs font-semibold text-gray-900">Veteran Educator</div>
+                  <div className="text-xs text-gray-500">Harvard Business</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <p className="text-sm text-gray-600 mb-2">"These are just whispers. Wait until you see what they can actually do."</p>
+            <p className="text-sm font-medium text-blue-600">Pre-expert profiles unlock at launch</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Preview */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="rounded-3xl p-8" style={{ backgroundColor: '#0066ab' }}>
+            <div className="text-center mb-12">
+              <div className="mb-6">
+                <span className="inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-full text-sm font-medium backdrop-blur-sm border border-white/30">
+                  Platform Preview
+                </span>
+              </div>
+              <h2 className="text-4xl font-bold text-white mb-6">Something Revolutionary is Coming</h2>
+              <p className="text-lg text-white/90 max-w-4xl mx-auto leading-relaxed">
+                We're crafting an AI-powered learning experience that will redefine education. Get ready for personalized tutoring like never before.
+              </p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div className="bg-gray-100 px-6 py-4 flex items-center">
+                  <div className="flex space-x-2 mr-4">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                  <div className="bg-white rounded-lg px-4 py-2 flex-1 text-gray-400 text-sm">
+                    scholora.ma/learning-dashboard
+                  </div>
+                </div>
+                
+                <div className="p-8">
+                  <div className="grid grid-cols-4 gap-6 mb-12">
+                    <div className="bg-blue-100 rounded-2xl p-8 h-32">
+                      <div className="w-full h-full bg-blue-200 rounded-xl"></div>
+                    </div>
+                    <div className="bg-green-100 rounded-2xl p-8 h-32">
+                      <div className="w-full h-full bg-green-200 rounded-xl"></div>
+                    </div>
+                    <div className="bg-purple-100 rounded-2xl p-8 h-32">
+                      <div className="w-full h-full bg-purple-200 rounded-xl"></div>
+                    </div>
+                    <div className="bg-orange-100 rounded-2xl p-8 h-32">
+                      <div className="w-full h-full bg-orange-200 rounded-xl"></div>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What students will be learning */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm font-medium">
+                Coming Soon
+              </span>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">What students will be learning</h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              We're building something extraordinary. Here's a glimpse of the subjects and experiences that will be available when we launch.
+            </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { subject: 'English tutors', count: '33,602 teachers', icon: '🇬🇧' },
-              { subject: 'Spanish tutors', count: '10,056 teachers', icon: '🇪🇸' },
-              { subject: 'French tutors', count: '3,714 teachers', icon: '🇫🇷' },
-              { subject: 'German tutors', count: '1,518 teachers', icon: '🇩🇪' },
-              { subject: 'Italian tutors', count: '2,542 teachers', icon: '🇮🇹' },
-              { subject: 'Chinese tutors', count: '5,253 teachers', icon: '🇨🇳' },
-              { subject: 'Arabic tutors', count: '3,651 teachers', icon: '🇲🇦' },
-              { subject: 'Japanese tutors', count: '2,902 teachers', icon: '🇯🇵' },
-              { subject: 'Portuguese tutors', count: '1,635 teachers', icon: '🇵🇹' },
+              { subject: 'English tutors', count: '1000+ tutors', icon: '🇺🇸' },
+              { subject: 'Spanish tutors', count: '900+ tutors', icon: '🇪🇸' },
+              { subject: 'French tutors', count: '800+ tutors', icon: '🇫🇷' },
+              { subject: 'German tutors', count: '700+ tutors', icon: '🇩🇪' },
+              { subject: 'Italian tutors', count: '600+ tutors', icon: '🇮🇹' },
+              { subject: 'Chinese tutors', count: '500+ tutors', icon: '🇨🇳' },
             ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-6 border-2 border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer group">
+              <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer">
                 <div className="flex items-center">
-                  <span className="text-3xl mr-4">{item.icon}</span>
-                  <span className="font-bold text-gray-900 text-lg group-hover:text-blue-600 transition-colors">{item.subject}</span>
+                  <span className="text-2xl mr-3">{item.icon}</span>
+                  <span className="font-medium text-gray-900">{item.subject}</span>
                 </div>
-                <div className="flex items-center text-gray-600 group-hover:text-blue-600 transition-colors">
-                  <span className="font-medium mr-3">{item.count}</span>
-                  <ChevronRight className="w-5 h-5" />
+                <div className="text-sm text-gray-600">
+                  {item.count}
                 </div>
               </div>
             ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <button className="text-blue-600 hover:text-blue-700 font-bold text-lg transition-colors">Show more</button>
           </div>
         </div>
       </section>
@@ -475,7 +598,6 @@ export default function HomePage() {
           </div>
           
           <div className="relative">
-            {/* Slider Container */}
             <div className="overflow-hidden rounded-2xl">
               <div 
                 className="flex transition-transform duration-1000 ease-in-out"
@@ -483,9 +605,7 @@ export default function HomePage() {
                   transform: `translateX(-${(currentSlide * 100) / 3}%)`,
                 }}
               >
-                {/* Tous les témoignages en ligne */}
                 {[
-                  // Story 1 - Oumaima
                   {
                     name: "Oumaima, Casablanca",
                     subject: "Baccalauréat • Math",
@@ -493,7 +613,6 @@ export default function HomePage() {
                     avatar: "👩‍🎓",
                     bgColor: "bg-blue-100"
                   },
-                  // Story 2 - Karim
                   {
                     name: "Karim, Rabat",
                     subject: "IELTS • English",
@@ -501,7 +620,6 @@ export default function HomePage() {
                     avatar: "👨‍🎓",
                     bgColor: "bg-green-100"
                   },
-                  // Story 3 - Nisrine
                   {
                     name: "Nisrine, Marrakech",
                     subject: "French • Literature",
@@ -509,7 +627,6 @@ export default function HomePage() {
                     avatar: "👩‍💻",
                     bgColor: "bg-purple-100"
                   },
-                  // Story 4 - Ahmed
                   {
                     name: "Ahmed, Fes",
                     subject: "Physics • Bac",
@@ -517,7 +634,6 @@ export default function HomePage() {
                     avatar: "👨‍🔬",
                     bgColor: "bg-orange-100"
                   },
-                  // Story 5 - Fatima
                   {
                     name: "Fatima, Meknes",
                     subject: "Spanish • Language",
@@ -525,7 +641,6 @@ export default function HomePage() {
                     avatar: "👩‍🎨",
                     bgColor: "bg-pink-100"
                   },
-                  // Story 6 - Youssef
                   {
                     name: "Youssef, Tangier",
                     subject: "Economics • University",
@@ -533,7 +648,6 @@ export default function HomePage() {
                     avatar: "👨‍💼",
                     bgColor: "bg-indigo-100"
                   },
-                  // Story 7 - Salma
                   {
                     name: "Salma, Agadir",
                     subject: "Chemistry • Medical School",
@@ -541,7 +655,6 @@ export default function HomePage() {
                     avatar: "👩‍⚕️",
                     bgColor: "bg-teal-100"
                   },
-                  // Story 8 - Hamza
                   {
                     name: "Hamza, Oujda",
                     subject: "Programming • Computer Science",
@@ -549,7 +662,6 @@ export default function HomePage() {
                     avatar: "👨‍💻",
                     bgColor: "bg-yellow-100"
                   },
-                  // Story 9 - Zineb
                   {
                     name: "Zineb, Kenitra",
                     subject: "German • Language Certification",
@@ -583,7 +695,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Dots Indicator seulement */}
             <div className="flex justify-center space-x-2 mt-8">
               {[...Array(9)].map((_, index) => (
                 <div
@@ -601,37 +712,37 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Section */}
-      <section id="newsletter" className="py-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-3xl p-12 text-center shadow-2xl">
-            <div className="mb-8">
-              <span className="inline-block px-6 py-2 bg-white/20 text-white rounded-full text-sm font-medium backdrop-blur-sm">
+      <section className="py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl p-8 text-center shadow-xl">
+            <div className="mb-6">
+              <span className="inline-block px-4 py-2 bg-white/20 text-white rounded-full text-sm font-medium backdrop-blur-sm">
                 Stay up to date
               </span>
             </div>
             
-            <h2 className="text-5xl font-bold text-white mb-6 tracking-tight">Get updates from Scholora</h2>
-            <p className="text-xl text-blue-100 mb-12 leading-relaxed max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold text-white mb-4">Get updates from Scholora</h2>
+            <p className="text-lg text-blue-100 mb-8 leading-relaxed max-w-2xl mx-auto">
               Stay in the loop about the latest expert opportunities and announcements.
             </p>
             
-            <div className="max-w-md mx-auto mb-8">
-              <div className="flex flex-col sm:flex-row gap-4">
+            <div className="max-w-md mx-auto mb-6">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <input 
                   type="email" 
                   placeholder="your email address" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 px-6 py-4 rounded-xl bg-white/10 text-white placeholder-blue-200 border-2 border-white/20 focus:outline-none focus:ring-4 focus:ring-white/30 backdrop-blur-sm font-medium"
+                  className="flex-1 px-4 py-3 rounded-lg bg-white/10 text-white placeholder-blue-200 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 backdrop-blur-sm"
                 />
                 <button 
                   onClick={handleSubscribe}
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold hover:bg-blue-50 transition-all duration-200 transform hover:scale-105 shadow-lg whitespace-nowrap">
+                  className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-200 whitespace-nowrap">
                   Subscribe
                 </button>
               </div>
               {message && (
-                <p className="mt-4 text-sm text-white font-medium">
+                <p className="mt-3 text-sm text-white">
                   {message}
                 </p>
               )}
