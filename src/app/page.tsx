@@ -1,15 +1,16 @@
 'use client';
 import Link from 'next/link'
-import Image from 'next/image'
-import { Star, Users, BookOpen, Award, ChevronRight, Play, User, Calendar, Clock } from 'lucide-react'
+import { Star, Users, BookOpen, Award, Play } from 'lucide-react'
 import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { API_URL } from '@/lib/config';
 
 export default function HomePage() {
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [currentTestimonialSlide, setCurrentTestimonialSlide] = useState(0);
    const [email, setEmail] = useState("");
+   const [loading, setLoading] = useState(false);
    const [message, setMessage] = useState("");
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
@@ -54,33 +55,34 @@ export default function HomePage() {
      return () => clearInterval(interval);
    }, []);
 
-    const handleSubscribe = async () => {
-    if (!email) {
-      setMessage("Please enter your email.");
-      return;
-    }
+   const handleSubmit = async (e: React.FormEvent) => {
+     e.preventDefault();
+     setLoading(true);
+     setMessage("");
 
-    try {
-      const res = await fetch("http://localhost:8000/api/newsletters", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+     try {
+       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/newsletters`, {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ email }),
+       });
 
-      if (res.ok) {
-        setMessage("Subscribed successfully!");
-        setEmail("");
-      } else {
-        const data = await res.json();
-        setMessage(data.message || "Something went wrong.");
-      }
-    } catch (error) {
-      console.error(error);
-      setMessage("Network error.");
-    }
-  };
+       if (res.ok) {
+         setMessage("Email ajouté avec succès!");
+         setEmail("");
+       } else {
+         const data = await res.json();
+         setMessage(data.message || "Erreur");
+       }
+     } catch (error) {
+       console.error(error);
+       setMessage("Erreur de connexion");
+     } finally {
+       setLoading(false);
+     }
+   };
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -140,17 +142,26 @@ export default function HomePage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 items-center">
-              <Link href="/auth/register" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200">
-                Get Early Access
-              </Link>
-              <div className="flex items-center gap-2">
-                <Play className="w-4 h-4 text-gray-600" />
-                <input 
-                  type="email" 
-                  placeholder="Entrez votre email" 
-                  className="border border-gray-300 text-gray-700 font-medium px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[220px] text-sm"
-                />
-              </div>
+              <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
+                <button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50">
+                  {loading ? 'Sending...' : 'Get Early Access'}
+                </button>
+              </form>
+              <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-2">
+                  <Play className="w-4 h-4 text-gray-600" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Entrez votre email"
+                    required
+                    disabled={loading}
+                    className="border border-gray-300 text-gray-700 font-medium px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[220px] text-sm"
+                  />
+                </div>
+                {message && <p className="text-sm text-green-600 font-medium">{message}</p>}
+              </form>
             </div>
 
             {isModalOpen && (
@@ -596,27 +607,30 @@ export default function HomePage() {
               Stay in the loop about the latest expert opportunities and announcements.
             </p>
             
-            <div className="max-w-md mx-auto mb-6">
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto mb-6">
               <div className="flex flex-col sm:flex-row gap-3">
                 <input 
                   type="email" 
                   placeholder="your email address" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
                   className="flex-1 px-4 py-3 rounded-lg bg-white/10 text-white placeholder-blue-200 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/30 backdrop-blur-sm"
                 />
                 <button 
-                  onClick={handleSubscribe}
-                  className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-200 whitespace-nowrap">
-                  Subscribe
+                  type="submit"
+                  disabled={loading}
+                  className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-all duration-200 whitespace-nowrap disabled:opacity-50">
+                  {loading ? 'Sending...' : 'Subscribe'}
                 </button>
               </div>
               {message && (
-                <p className="mt-3 text-sm text-white">
+                <p className="mt-3 text-sm text-white font-medium">
                   {message}
                 </p>
               )}
-            </div>
+            </form>
             
             <p className="text-blue-200 text-sm">
               By subscribing to our newsletter, Terms & Privacy
