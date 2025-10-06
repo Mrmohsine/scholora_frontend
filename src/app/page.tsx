@@ -97,7 +97,7 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Born in the Glow of <span className="text-blue-500">Moroccan</span> Evenings.
+              🌙 Born in the Glow of <span className="text-blue-500">Moroccan</span> Evenings.
             </h1>
             
             <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -160,19 +160,19 @@ export default function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">Primary</div>
-                <div className="text-sm text-gray-600">6 → 11</div>
+                <div className="text-sm text-gray-600">6y → 11y</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">Middle School</div>
-                <div className="text-sm text-gray-600">12 → 14</div>
+                <div className="text-sm text-gray-600">12y → 14y</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">High School</div>
-                <div className="text-sm text-gray-600">15 → 17</div>
+                <div className="text-sm text-gray-600">15y → 17y</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-gray-900 mb-1">University</div>
-                <div className="text-sm text-gray-600">18 → (adult)</div>
+                <div className="text-sm text-gray-600">18y → (adult)</div>
               </div>
             </div>
            
@@ -207,10 +207,7 @@ export default function HomePage() {
               01
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Choose Your Academic</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Tell us what you want to learn, your current level, and your preferred schedule. We'll handle the rest.
-          </p>
+          <h3 className="text-2xl font-bold text-gray-900 text-center mb-4">Choose Your Academic</h3>
         </div>
       </div>
       
@@ -224,10 +221,7 @@ export default function HomePage() {
               02
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Match with a Tutor</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Our AI finds the perfect tutor for you based on expertise, teaching style, and availability.
-          </p>
+          <h3 className="text-2xl font-bold text-gray-900 text-center mb-4">Match with a Tutor</h3>
         </div>
       </div>
       
@@ -241,10 +235,7 @@ export default function HomePage() {
               03
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Access Your E-class</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Start your personalized learning journey and track your progress every step of the way.
-          </p>
+          <h3 className="text-2xl font-bold text-gray-900 text-center  mb-4">Access Your E-class</h3>
         </div>
       </div>
     </div>
@@ -259,7 +250,7 @@ export default function HomePage() {
                 Coming Soon
               </span>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Meet our world-class experts</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Meet Our Morocco’s Premier Tutors</h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
               We're assembling an extraordinary team of educators, innovators, and subject matter experts. Their identities will be revealed when we launch - but their expertise is already legendary.
             </p>
@@ -276,9 +267,9 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <h3 className="text-lg font-bold text-gray-900 mb-2">AI & Machine Learning Expert</h3>
-              <div className="text-sm text-gray-600 mb-1">15+ years experience</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">Former Google AI Researcher</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Physics Tutor</h3>
+              <div className="text-sm text-gray-600 mb-1"><b>Level:</b> 2BAC</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">PhD Research</div>
               
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -304,9 +295,9 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Advanced Mathematics Expert</h3>
-              <div className="text-sm text-gray-600 mb-1">12+ years experience</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">MIT Mathematics Professor</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Information Technology Tutor</h3>
+              <div className="text-sm text-gray-600 mb-1"><b>Level:</b> University Preparation</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">ENSET Professor</div>
               
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -332,9 +323,9 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Language Mastery Expert</h3>
-              <div className="text-sm text-gray-600 mb-1">20+ years experience</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">Polyglot & UN Translator</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Economics Tutor</h3>
+              <div className="text-sm text-gray-600 mb-1"><b>Level: </b>2BAC</div>
+              <div className="text-sm text-blue-600 font-medium mb-4">ENCG Master Commerce International</div>
               
               <div className="flex justify-center mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -382,42 +373,44 @@ export default function HomePage() {
                 }}
               >
                 {[
-                  {
-                    quote: "I heard they recruited someone from OpenAI at a crazy level. Absolutely brilliant.",
-                    name: "Industry Insider",
-                    role: "Former Yahoo/Google",
-                    color: "bg-purple-500"
-                  },
-                  {
-                    quote: "The mathematics expert they recruited? Former MIT that recruited us.",
-                    name: "Academic Colleague",
-                    role: "XYZ Academy",
-                    color: "bg-green-500"
-                  },
-                  {
-                    quote: "Their language specialist speaks 12 languages fluently. We've never seen anything like it.",
-                    name: "Industry Insider",
-                    role: "UN Translation",
-                    color: "bg-purple-600"
-                  },
-                  {
-                    quote: "The physics expert they recruited? Former NASA. That's all I can say publicly.",
-                    name: "Academic Colleague",
-                    role: "Research Institution",
-                    color: "bg-red-500"
-                  },
-                  {
-                    quote: "Their computer science expert? Solved. His platform and big top-level colleagues.",
-                    name: "Valley Insider",
-                    role: "Big Tech Senior",
-                    color: "bg-orange-500"
-                  },
-                  {
-                    quote: "I've been in education for 30 years. This team they're building is unprecedented.",
-                    name: "Veteran Educator",
-                    role: "Harvard Business",
-                    color: "bg-blue-500"
-                  }
+                    {
+                      quote: "Vous êtes le meilleur Monsieur, grâce à vous j'ai repris goût au développement",
+                      name: "Student",
+                      role: "Computer Science",
+                      color: "bg-red-500"
+
+                    },
+                    {
+                      quote: "J'ai eu un 20/20 en économie générale grâce à...",
+                      name: "Student",
+                      role: "2BAC Student Economy",
+                      color: "bg-orange-500"
+                    },
+                    {
+                      quote: "Je confirme 20 / 20 en contrôle continu et national grâce à Dieu et prof ....",
+                      name: "Student",
+                      role: "2BAC Physic",
+                      color: "bg-blue-500"
+                    },
+                    {
+                      quote: "Vous êtes le meilleur Monsieur, grâce à vous j'ai repris goût au développement",
+                      name: "Student",
+                      role: "Computer Science",
+                      color: "bg-red-500"
+
+                    },
+                    {
+                      quote: "J'ai eu un 20/20 en économie générale grâce à...",
+                      name: "Student",
+                      role: "2BAC Student Economy",
+                      color: "bg-orange-500"
+                    },
+                    {
+                      quote: "Je confirme 20 / 20 en contrôle continu et national grâce à Dieu et prof ....",
+                      name: "Student",
+                      role: "2BAC Physic",
+                      color: "bg-blue-500"
+                    },
                 ].map((testimonial, index) => (
                   <div key={index} className="w-1/3 flex-shrink-0 px-4">
                     <div className="bg-white rounded-lg p-6 border border-gray-200">
@@ -526,12 +519,16 @@ export default function HomePage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { subject: 'English tutors', count: '1000+ tutors', icon: '🇺🇸' },
-              { subject: 'Spanish tutors', count: '900+ tutors', icon: '🇪🇸' },
-              { subject: 'French tutors', count: '800+ tutors', icon: '🇫🇷' },
-              { subject: 'German tutors', count: '700+ tutors', icon: '🇩🇪' },
-              { subject: 'Italian tutors', count: '600+ tutors', icon: '🇮🇹' },
-              { subject: 'Chinese tutors', count: '500+ tutors', icon: '🇨🇳' },
+              { subject: 'Primary Curriculum', count: 'Coming Soon'},
+              { subject: 'Preparatory Curriculum', count: 'Coming Soon' },
+              { subject: 'Secondary Curriculum', count: 'Coming Soon' },
+              { subject: 'University Curriculum', count: 'Coming Soon' },
+              { subject: 'Language Learning Curriculum', count: 'Coming Soon' },
+              { subject: 'Programming Curriculum', count: 'Coming Soon'},
+              { subject: 'SAT, IELTS,TOEFL,TCF Preparation Curriculum', count: 'Coming Soon' },
+              { subject: 'Personal Development Curriculum', count: 'Coming Soon' },
+              { subject: 'Entrepreneurship & Innovation Curriculum', count: 'Coming Soon' },
+
             ].map((item, index) => (
               <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 cursor-pointer">
                 <div className="flex items-center">
