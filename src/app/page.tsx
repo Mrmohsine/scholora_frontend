@@ -88,63 +88,31 @@ export default function HomePage() {
     <div className="min-h-screen bg-white font-sans">
       <Header />
       <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-gray-700 mb-2">
-                🎓 Launch Countdown
-              </h3>
-              <p className="text-base text-gray-600">
-                Until Scholora goes live
-              </p>
-            </div>
-            
-            <div className="flex justify-center gap-3 mb-8">
-              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
-                <div className="text-2xl font-bold">{timeLeft.days.toString().padStart(2, '0')}</div>
-                <div className="text-xs uppercase text-gray-300">DAYS</div>
-              </div>
-              
-              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
-                <div className="text-2xl font-bold">{timeLeft.hours.toString().padStart(2, '0')}</div>
-                <div className="text-xs uppercase text-gray-300">HOURS</div>
-              </div>
-              
-              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
-                <div className="text-2xl font-bold">{timeLeft.minutes.toString().padStart(2, '0')}</div>
-                <div className="text-xs uppercase text-gray-300">MIN</div>
-              </div>
-              
-              <div className="bg-gray-900 text-white rounded-lg px-4 py-3 min-w-[80px] text-center">
-                <div className="text-2xl font-bold">{timeLeft.seconds.toString().padStart(2, '0')}</div>
-                <div className="text-xs uppercase text-gray-300">SEC</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 overflow-hidden">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center">
             <div className="mb-6">
               <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                🚀 Revolutionary Learning Platform
+                🇲🇦 Inspired by the Swaye3 generation
               </span>
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Where <span className="text-blue-500">Learning</span> Meets Possibility
+              Born in the Glow of <span className="text-blue-500">Moroccan</span> Evenings.
             </h1>
             
             <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Connect with world-class tutors across Morocco. Personalized learning experiences that adapt to your pace, schedule, and goals. Join thousands of successful learners who are already transforming their futures.
+              What began as evening lessons in every Moroccan   
+                                   neighborhood now thrives online. Scholora connects students 
+                                   with expert tutors who understand our culture, struggles, and 
+                                   dreams. This is Morocco’s new way to learn — smarter, prouder, 
+                                   and limitless.
+
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 items-center">
               <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
                 <button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 disabled:opacity-50">
-                  {loading ? 'Sending...' : 'Get Early Access'}
+                  {loading ? 'Sending...' : 'Join The GenScholora'}
                 </button>
               </form>
               <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
@@ -191,37 +159,23 @@ export default function HomePage() {
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">1,500+</div>
-                <div className="text-sm text-gray-600">Students</div>
-                <div className="text-xs text-gray-500">Online Students</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">Primary</div>
+                <div className="text-sm text-gray-600">6 → 11</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">25k+</div>
-                <div className="text-sm text-gray-600">Courses</div>
-                <div className="text-xs text-gray-500">Available courses</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">Middle School</div>
+                <div className="text-sm text-gray-600">12 → 14</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">98%</div>
-                <div className="text-sm text-gray-600">Success Rate</div>
-                <div className="text-xs text-gray-500">Success rate</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">High School</div>
+                <div className="text-sm text-gray-600">15 → 17</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-900 mb-1">50+</div>
-                <div className="text-sm text-gray-600">Years</div>
-                <div className="text-xs text-gray-500">Expert experience</div>
+                <div className="text-3xl font-bold text-gray-900 mb-1">University</div>
+                <div className="text-sm text-gray-600">18 → (adult)</div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-8 max-w-md mx-auto mb-16">
-              <div className="bg-blue-100 rounded-lg p-4 text-center">
-                <div className="text-blue-600 text-2xl font-bold">3166</div>
-                <div className="text-xs text-gray-600">Mind Being Replaced</div>
-              </div>
-              <div className="bg-purple-100 rounded-lg p-4 text-center">
-                <div className="text-purple-600 text-2xl font-bold">150</div>
-                <div className="text-xs text-gray-600">Mental Rewarding Testing</div>
-              </div>
-            </div>
+           
           </div>
         </div>
       </section>
@@ -253,7 +207,7 @@ export default function HomePage() {
               01
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Set Your Goals</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">Choose Your Academic</h3>
           <p className="text-gray-600 leading-relaxed">
             Tell us what you want to learn, your current level, and your preferred schedule. We'll handle the rest.
           </p>
@@ -270,7 +224,7 @@ export default function HomePage() {
               02
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Match with Experts</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">Match with a Tutor</h3>
           <p className="text-gray-600 leading-relaxed">
             Our AI finds the perfect tutor for you based on expertise, teaching style, and availability.
           </p>
@@ -287,7 +241,7 @@ export default function HomePage() {
               03
             </div>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Achieve Results</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">Access Your E-class</h3>
           <p className="text-gray-600 leading-relaxed">
             Start your personalized learning journey and track your progress every step of the way.
           </p>
