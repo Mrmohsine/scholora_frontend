@@ -74,20 +74,18 @@ export default function TutorRegistrationPage() {
  };
 
  const handleSaveDraft = () => {
-   // Save to localStorage or API
    localStorage.setItem('tutorRegistrationDraft', JSON.stringify(formData));
    console.log('Draft saved:', formData);
  };
 
  const handleSubmit = () => {
-   // Final submission logic
    console.log('Final submission:', formData);
  };
 
  const renderCurrentStep = () => {
    switch (currentStep) {
      case 1:
-       return <AboutStep formData={formData} onUpdate={updateFormData} />;
+       return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
      case 2:
        return <PhotoStep formData={formData} onUpdate={updateFormData} />;
      case 3:
@@ -103,7 +101,7 @@ export default function TutorRegistrationPage() {
      case 8:
        return <PricingStep formData={formData} onUpdate={updateFormData} />;
      default:
-       return <AboutStep formData={formData} onUpdate={updateFormData} />;
+       return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
    }
  };
 
@@ -163,47 +161,49 @@ export default function TutorRegistrationPage() {
            {/* Dynamic Step Content */}
            {renderCurrentStep()}
 
-           {/* Navigation */}
-           <div className="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
-             <button
-               onClick={prevStep}
-               disabled={currentStep === 1}
-               className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all ${
-                 currentStep === 1 
-                   ? 'text-gray-400 cursor-not-allowed' 
-                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-               }`}
-             >
-               <ArrowLeft className="w-4 h-4" />
-               <span>Previous</span>
-             </button>
-
-             <div className="flex space-x-3">
-               <button 
-                 onClick={handleSaveDraft}
-                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+           {/* Navigation - Hide for Step 1 since AboutStep has its own buttons */}
+           {currentStep !== 1 && (
+             <div className="flex items-center justify-between pt-8 mt-8 border-t border-gray-200">
+               <button
+                 onClick={prevStep}
+                 disabled={currentStep === 1}
+                 className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+                   currentStep === 1 
+                     ? 'text-gray-400 cursor-not-allowed' 
+                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                 }`}
                >
-                 Save Draft
+                 <ArrowLeft className="w-4 h-4" />
+                 <span>Previous</span>
                </button>
-               
-               {currentStep === steps.length ? (
-                 <button
-                   onClick={handleSubmit}
-                   className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all"
+
+               <div className="flex space-x-3">
+                 <button 
+                   onClick={handleSaveDraft}
+                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
                  >
-                   <span>Submit Application</span>
+                   Save Draft
                  </button>
-               ) : (
-                 <button
-                   onClick={nextStep}
-                   className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all"
-                 >
-                   <span>Continue</span>
-                   <ArrowRight className="w-4 h-4" />
-                 </button>
-               )}
+                 
+                 {currentStep === steps.length ? (
+                   <button
+                     onClick={handleSubmit}
+                     className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all"
+                   >
+                     <span>Submit Application</span>
+                   </button>
+                 ) : (
+                   <button
+                     onClick={nextStep}
+                     className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all"
+                   >
+                     <span>Continue</span>
+                     <ArrowRight className="w-4 h-4" />
+                   </button>
+                 )}
+               </div>
              </div>
-           </div>
+           )}
          </div>
        </div>
 
