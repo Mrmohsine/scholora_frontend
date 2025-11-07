@@ -1,8 +1,9 @@
-// components/tutor-registration/steps/CertificationStep.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, Trash2, Info } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface CertificationStepProps {
   formData: {
@@ -16,9 +17,12 @@ interface CertificationStepProps {
     hasNoCertificate?: boolean;
   };
   onUpdate: (data: any) => void;
+  onNext: () => void;
 }
 
-const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
+const CertificationStep = ({ formData, onUpdate, onNext }: CertificationStepProps) => {
+  const [loading, setLoading] = useState(false);
+
   const subjects = [
     'English', 'French', 'Spanish', 'German', 'Arabic', 'Chinese',
     'Mathematics', 'Physics', 'Chemistry', 'Biology', 'History', 'Geography'
@@ -36,6 +40,21 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
   ];
 
   const years = Array.from({ length: 50 }, (_, i) => (new Date().getFullYear() - i).toString());
+
+  // Initialize with one certificate if none exist - DANS useEffect
+  useEffect(() => {
+    if (!formData.certifications?.length && !formData.hasNoCertificate) {
+      onUpdate({
+        certifications: [{
+          subject: '',
+          certification: '',
+          yearsFrom: '',
+          yearsTo: '',
+          file: null
+        }]
+      });
+    }
+  }, []); // Run once on mount
 
   const addCertificate = () => {
     const currentCertifications = formData.certifications || [];
@@ -86,10 +105,78 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
     });
   };
 
-  // Initialize with one certificate if none exist and not marked as no certificate
-  if (!formData.certifications?.length && !formData.hasNoCertificate) {
-    addCertificate();
-  }
+  const handleSaveDraft = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveCertificationStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your certifications have been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save certifications'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContinue = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveCertificationStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Certifications saved successfully',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false
+        });
+
+        onNext();
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save certifications',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -108,6 +195,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
           checked={formData.hasNoCertificate || false}
           onChange={(e) => handleNoCertificateChange(e.target.checked)}
           className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+          disabled={loading}
         />
         <label htmlFor="noCertificate" className="text-sm font-medium text-gray-900">
           I don't have a teaching certificate
@@ -118,7 +206,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
       {!formData.hasNoCertificate && (
         <div className="space-y-6">
           {(formData.certifications || []).map((cert, index) => (
-            <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6">
+            <div key={index} className="bg-gray-50 rounded-xl p-6 space-y-6 relative">
               {/* Subject */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
@@ -129,6 +217,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                     value={cert.subject}
                     onChange={(e) => updateCertificate(index, 'subject', e.target.value)}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                    disabled={loading}
                   >
                     <option value="">English</option>
                     {subjects.map((subject) => (
@@ -137,15 +226,17 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
-                {formData.certifications && formData.certifications.length > 1 && (
-                  <button
-                    onClick={() => removeCertificate(index)}
-                    className="absolute top-3 right-3 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                )}
               </div>
+
+              {formData.certifications && formData.certifications.length > 1 && (
+                <button
+                  onClick={() => removeCertificate(index)}
+                  className="absolute top-3 right-3 p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                  disabled={loading}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
 
               {/* Certification */}
               <div>
@@ -157,6 +248,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                     value={cert.certification}
                     onChange={(e) => updateCertificate(index, 'certification', e.target.value)}
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                    disabled={loading}
                   >
                     {certifications.map((certification) => (
                       <option key={certification} value={certification}>{certification}</option>
@@ -175,6 +267,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                   type="checkbox"
                   id={`notOnList-${index}`}
                   className="w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  disabled={loading}
                 />
                 <label htmlFor={`notOnList-${index}`} className="text-sm text-gray-700">
                   My certificate is not on the list
@@ -192,6 +285,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                       value={cert.yearsFrom}
                       onChange={(e) => updateCertificate(index, 'yearsFrom', e.target.value)}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                      disabled={loading}
                     >
                       <option value="">Select</option>
                       {years.map((year) => (
@@ -205,6 +299,7 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                       value={cert.yearsTo}
                       onChange={(e) => updateCertificate(index, 'yearsTo', e.target.value)}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                      disabled={loading}
                     >
                       <option value="">Select</option>
                       {years.map((year) => (
@@ -232,12 +327,13 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
                   }}
                   className="hidden"
                   id={`certificate-upload-${index}`}
+                  disabled={loading}
                 />
                 <label
                   htmlFor={`certificate-upload-${index}`}
                   className="block w-full bg-white border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-50 cursor-pointer transition-colors text-center"
                 >
-                  Upload
+                  {cert.file ? cert.file.name : 'Upload'}
                 </label>
 
                 <div className="flex items-start space-x-3 mt-4 p-3 bg-blue-100 rounded-lg">
@@ -258,12 +354,33 @@ const CertificationStep = ({ formData, onUpdate }: CertificationStepProps) => {
           {/* Add Another Certificate Button */}
           <button
             onClick={addCertificate}
-            className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+            className="text-blue-600 hover:text-blue-700 font-semibold transition-colors disabled:opacity-50"
+            disabled={loading}
           >
             Add another certificate
           </button>
         </div>
       )}
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={loading}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Continue →'}
+        </button>
+      </div>
     </div>
   );
 };

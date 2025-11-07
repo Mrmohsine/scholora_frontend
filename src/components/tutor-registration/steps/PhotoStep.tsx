@@ -1,8 +1,9 @@
-// components/tutor-registration/steps/PhotoStep.tsx
 'use client';
 
 import { useState } from 'react';
 import { Upload, Check } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface PhotoStepProps {
   formData: {
@@ -11,14 +12,24 @@ interface PhotoStepProps {
     lastName?: string;
   };
   onUpdate: (data: any) => void;
+  onNext: () => void;
 }
 
-const PhotoStep = ({ formData, onUpdate }: PhotoStepProps) => {
+const PhotoStep = ({ formData, onUpdate, onNext }: PhotoStepProps) => {
   const [dragActive, setDragActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: 'error',
+          title: 'File too large',
+          text: 'Photo must be less than 5MB'
+        });
+        return;
+      }
       onUpdate({ photo: file });
     }
   };
@@ -40,7 +51,116 @@ const PhotoStep = ({ formData, onUpdate }: PhotoStepProps) => {
     
     const file = e.dataTransfer.files?.[0];
     if (file && file.type.startsWith('image/')) {
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: 'error',
+          title: 'File too large',
+          text: 'Photo must be less than 5MB'
+        });
+        return;
+      }
       onUpdate({ photo: file });
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (!formData.photo) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No photo selected',
+        text: 'Please upload a photo first'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.savePhotoStep(parseInt(tutorId), formData.photo);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your photo has been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save photo'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContinue = async () => {
+    console.log('1. Starting continue');
+    
+    if (!formData.photo) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No photo selected',
+        text: 'Please upload a photo to continue'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    console.log('2. Tutor ID:', tutorId);
+    
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      console.log('3. Calling API');
+      const response = await tutorRegistrationApi.savePhotoStep(parseInt(tutorId), formData.photo);
+      console.log('4. API Response:', response);
+      
+      if (response.success) {
+        console.log('5. Showing success alert');
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Photo saved successfully',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false
+        });
+
+        console.log('6. Calling onNext');
+        onNext();
+        console.log('7. onNext called');
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save photo',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,6 +225,7 @@ const PhotoStep = ({ formData, onUpdate }: PhotoStepProps) => {
             onChange={handleFileChange}
             className="hidden"
             id="photo-upload"
+            disabled={loading}
           />
           <label
             htmlFor="photo-upload"
@@ -141,6 +262,26 @@ const PhotoStep = ({ formData, onUpdate }: PhotoStepProps) => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={loading}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Continue →'}
+        </button>
       </div>
     </div>
   );

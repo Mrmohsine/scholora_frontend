@@ -1,18 +1,21 @@
-// components/tutor-registration/steps/DescriptionStep.tsx
 'use client';
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface DescriptionStepProps {
   formData: {
     description?: string;
   };
   onUpdate: (data: any) => void;
+  onNext: () => void;
 }
 
-const DescriptionStep = ({ formData, onUpdate }: DescriptionStepProps) => {
+const DescriptionStep = ({ formData, onUpdate, onNext }: DescriptionStepProps) => {
   const [description, setDescription] = useState(formData.description || '');
+  const [loading, setLoading] = useState(false);
 
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
@@ -25,7 +28,7 @@ const DescriptionStep = ({ formData, onUpdate }: DescriptionStepProps) => {
   const guidelines = [
     {
       title: "1. Introduce yourself",
-      completed: description.length > 50 // Simple check - can be made more sophisticated
+      completed: description.length > 50
     },
     {
       title: "2. Teaching experience", 
@@ -33,13 +36,113 @@ const DescriptionStep = ({ formData, onUpdate }: DescriptionStepProps) => {
     },
     {
       title: "3. Motivate potential students",
-      completed: description.length > 100 // Simple check
+      completed: description.length > 100
     },
     {
       title: "4. Write a catchy headline",
       completed: description.length > 20 && description.includes('!')
     }
   ];
+
+  const handleSaveDraft = async () => {
+    if (!description.trim()) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No description',
+        text: 'Please write a description first'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveDescriptionStep(parseInt(tutorId), description);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your description has been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save description'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContinue = async () => {
+    if (!description.trim()) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No description',
+        text: 'Please write a description to continue'
+      });
+      return;
+    }
+
+    if (description.length < 50) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Description too short',
+        text: 'Please write at least 50 characters'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveDescriptionStep(parseInt(tutorId), description);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Description saved successfully',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false
+        });
+
+        onNext();
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save description',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -61,6 +164,7 @@ const DescriptionStep = ({ formData, onUpdate }: DescriptionStepProps) => {
           rows={8}
           className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-gray-900 placeholder-gray-400 resize-none"
           placeholder="Write your profile description here... Tell students about yourself, your teaching experience, and what makes you a great tutor!"
+          disabled={loading}
         />
         
         {/* Character Counter */}
@@ -108,6 +212,26 @@ const DescriptionStep = ({ formData, onUpdate }: DescriptionStepProps) => {
           <li>• Add a personal touch - hobbies, interests, or fun facts</li>
           <li>• End with an encouraging call-to-action</li>
         </ul>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={loading}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Continue →'}
+        </button>
       </div>
     </div>
   );

@@ -78,33 +78,32 @@ export default function TutorRegistrationPage() {
    console.log('Draft saved:', formData);
  };
 
- const handleSubmit = () => {
-   console.log('Final submission:', formData);
- };
+ const handleFinalSubmit = () => {
+  window.location.href = '/tutor-registration/success';
+};
 
- const renderCurrentStep = () => {
-   switch (currentStep) {
-     case 1:
-       return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
-     case 2:
-       return <PhotoStep formData={formData} onUpdate={updateFormData} />;
-     case 3:
-       return <CertificationStep formData={formData} onUpdate={updateFormData} />;
-     case 4:
-       return <EducationStep formData={formData} onUpdate={updateFormData} />;
-     case 5:
-       return <DescriptionStep formData={formData} onUpdate={updateFormData} />;
-     case 6:
-       return <VideoStep formData={formData} onUpdate={updateFormData} />;
-     case 7:
-       return <AvailabilityStep formData={formData} onUpdate={updateFormData} />;
-     case 8:
-       return <PricingStep formData={formData} onUpdate={updateFormData} />;
-     default:
-       return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
-   }
- };
-
+const renderCurrentStep = () => {
+  switch (currentStep) {
+    case 1:
+      return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 2:
+      return <PhotoStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 3:
+      return <CertificationStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 4:
+      return <EducationStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 5:
+      return <DescriptionStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 6:
+      return <VideoStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 7:
+      return <AvailabilityStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+    case 8:
+      return <PricingStep formData={formData} onUpdate={updateFormData} onSubmit={handleFinalSubmit} />;
+    default:
+      return <AboutStep formData={formData} onUpdate={updateFormData} onNext={nextStep} />;
+  }
+};
  return (
    <div className="min-h-screen bg-gray-50">
      <Header />
@@ -186,21 +185,21 @@ export default function TutorRegistrationPage() {
                  </button>
                  
                  {currentStep === steps.length ? (
-                   <button
-                     onClick={handleSubmit}
-                     className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all"
-                   >
-                     <span>Submit Application</span>
-                   </button>
-                 ) : (
-                   <button
-                     onClick={nextStep}
-                     className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all"
-                   >
-                     <span>Continue</span>
-                     <ArrowRight className="w-4 h-4" />
-                   </button>
-                 )}
+                  <button
+                    onClick={handleFinalSubmit}
+                    className="flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 transition-all"
+                  >
+                    <span>Submit Application</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={nextStep}
+                    className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all"
+                  >
+                    <span>Continue</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
                </div>
              </div>
            )}

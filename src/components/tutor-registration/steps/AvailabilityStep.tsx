@@ -1,8 +1,9 @@
-// components/tutor-registration/steps/AvailabilityStep.tsx
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Info, Plus } from 'lucide-react';
+import { ChevronDown, Info } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface TimeSlot {
   from: string;
@@ -17,9 +18,12 @@ interface AvailabilityStepProps {
     };
   };
   onUpdate: (data: any) => void;
+  onNext: () => void;
 }
 
-const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
+const AvailabilityStep = ({ formData, onUpdate, onNext }: AvailabilityStepProps) => {
+  const [loading, setLoading] = useState(false);
+
   const timezones = [
     'GMT-12 (GMT-12) - Baker Island',
     'GMT-11 (GMT-11) - American Samoa',
@@ -60,13 +64,13 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
   ];
 
   const defaultAvailability = {
-    Monday: [{ from: '', to: '' }],
-    Tuesday: [{ from: '', to: '' }],
-    Wednesday: [{ from: '', to: '' }],
-    Thursday: [{ from: '', to: '' }],
-    Friday: [{ from: '', to: '' }],
-    Saturday: [{ from: '', to: '' }],
-    Sunday: [{ from: '', to: '' }]
+    Monday: [],
+    Tuesday: [],
+    Wednesday: [],
+    Thursday: [],
+    Friday: [],
+    Saturday: [],
+    Sunday: []
   };
 
   const availability = formData.availability || defaultAvailability;
@@ -101,6 +105,43 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
     return availability[day] && availability[day].length > 0;
   };
 
+  const handleSaveDraft = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveAvailabilityStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your availability has been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save availability'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // src/lib/tutor/tutorRegistration.ts
+
+
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
@@ -123,6 +164,7 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
               value={formData.timezone || ''}
               onChange={(e) => updateTimezone(e.target.value)}
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+              disabled={loading}
             >
               <option value="">GMT+1 (GMT+1) - Africa, Casablanca</option>
               {timezones.map((timezone) => (
@@ -168,6 +210,7 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
                   checked={isDayEnabled(day)}
                   onChange={(e) => toggleDay(day, e.target.checked)}
                   className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  disabled={loading}
                 />
                 <label htmlFor={day} className="text-lg font-semibold text-gray-900">
                   {day}
@@ -177,7 +220,7 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
               {/* Time Slots */}
               {isDayEnabled(day) && (
                 <div className="ml-8 space-y-3">
-                  {availability[day].map((slot, slotIndex) => (
+                  {availability[day].map((slot: TimeSlot, slotIndex: number) => (
                     <div key={slotIndex} className="flex items-center space-x-4">
                       <span className="text-sm text-gray-600 w-8">From</span>
                       <div className="relative">
@@ -185,6 +228,7 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
                           value={slot.from}
                           onChange={(e) => updateTimeSlot(day, slotIndex, 'from', e.target.value)}
                           className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                          disabled={loading}
                         >
                           <option value="">09:00</option>
                           {timeOptions.map((time) => (
@@ -200,6 +244,7 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
                           value={slot.to}
                           onChange={(e) => updateTimeSlot(day, slotIndex, 'to', e.target.value)}
                           className="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
+                          disabled={loading}
                         >
                           <option value="">17:00</option>
                           {timeOptions.map((time) => (
@@ -213,7 +258,8 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
                   
                   <button
                     onClick={() => addTimeSlot(day)}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                    className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors disabled:opacity-50"
+                    disabled={loading}
                   >
                     Add another timeslot
                   </button>
@@ -233,6 +279,26 @@ const AvailabilityStep = ({ formData, onUpdate }: AvailabilityStepProps) => {
           <li>• Consider different time zones of your target students</li>
           <li>• You can always update your schedule later</li>
         </ul>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={loading}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Continue →'}
+        </button>
       </div>
     </div>
   );

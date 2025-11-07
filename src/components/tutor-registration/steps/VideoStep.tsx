@@ -1,8 +1,9 @@
-// components/tutor-registration/steps/VideoStep.tsx
 'use client';
 
 import { useState } from 'react';
 import { RotateCcw, Play, X, Check } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface VideoStepProps {
   formData: {
@@ -11,24 +12,115 @@ interface VideoStepProps {
     thumbnail?: File | null;
   };
   onUpdate: (data: any) => void;
+  onNext: () => void;
 }
 
-const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
+const VideoStep = ({ formData, onUpdate, onNext }: VideoStepProps) => {
   const [showMore, setShowMore] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [videoLink, setVideoLink] = useState(formData.videoLink || '');
+  const [loading, setLoading] = useState(false);
 
   const handleVideoUpload = (file: File) => {
+    if (file.size > 100 * 1024 * 1024) {
+      Swal.fire({
+        icon: 'error',
+        title: 'File too large',
+        text: 'Video must be less than 100MB'
+      });
+      return;
+    }
     onUpdate({ introVideo: file });
   };
 
   const handleThumbnailUpload = (file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        icon: 'error',
+        title: 'File too large',
+        text: 'Thumbnail must be less than 5MB'
+      });
+      return;
+    }
     onUpdate({ thumbnail: file });
   };
 
   const handleVideoLinkChange = (link: string) => {
     setVideoLink(link);
     onUpdate({ videoLink: link });
+  };
+
+  const handleSaveDraft = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveVideoStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your video has been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save video'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContinue = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveVideoStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Video saved successfully',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false
+        });
+
+        onNext();
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save video',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const doRequirements = [
@@ -103,11 +195,30 @@ const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
             )}
           </div>
 
-          {/* Re-record Button */}
-          <div className="flex justify-center">
+          {/* Upload Video Button */}
+          <div className="flex justify-center space-x-4">
+            <input
+              type="file"
+              accept="video/mp4,video/mov,video/avi"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleVideoUpload(file);
+              }}
+              className="hidden"
+              id="video-upload"
+              disabled={loading}
+            />
+            <label
+              htmlFor="video-upload"
+              className="flex items-center space-x-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 cursor-pointer transition-colors"
+            >
+              <span>Upload Video</span>
+            </label>
+
             <button
               onClick={() => setIsRecording(true)}
-              className="flex items-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              disabled={loading}
+              className="flex items-center space-x-2 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
             >
               <RotateCcw className="w-4 h-4" />
               <span>Re-record</span>
@@ -119,7 +230,6 @@ const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
             <p className="text-gray-700">
               Have a pre-recorded video on YouTube or Vimeo?{' '}
               <button 
-                onClick={() => {/* Toggle link input */}}
                 className="text-blue-600 underline font-medium"
               >
                 Insert link
@@ -133,6 +243,7 @@ const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
                 onChange={(e) => handleVideoLinkChange(e.target.value)}
                 placeholder="Paste your video URL here..."
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-gray-900 placeholder-gray-400"
+                disabled={loading}
               />
             </div>
           </div>
@@ -156,12 +267,13 @@ const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
               }}
               className="hidden"
               id="thumbnail-upload"
+              disabled={loading}
             />
             <label
               htmlFor="thumbnail-upload"
               className="inline-block bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 cursor-pointer transition-colors"
             >
-              Upload thumbnail
+              {formData.thumbnail ? formData.thumbnail.name : 'Upload thumbnail'}
             </label>
 
             <button
@@ -234,6 +346,26 @@ const VideoStep = ({ formData, onUpdate }: VideoStepProps) => {
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleContinue}
+          disabled={loading}
+          className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Continue →'}
+        </button>
       </div>
     </div>
   );
