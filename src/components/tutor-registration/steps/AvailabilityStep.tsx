@@ -139,8 +139,65 @@ const AvailabilityStep = ({ formData, onUpdate, onNext }: AvailabilityStepProps)
     }
   };
 
-  // src/lib/tutor/tutorRegistration.ts
+  const handleContinue = async () => {
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
 
+    // Vérifier si au moins un slot valide existe
+    const hasValidSlots = Object.values(availability).some((slots: any) => 
+      slots && slots.length > 0 && slots.some((slot: any) => slot.from && slot.to)
+    );
+
+    if (!hasValidSlots) {
+      const result = await Swal.fire({
+        icon: 'warning',
+        title: 'No availability set',
+        text: 'Do you want to continue without setting your availability? You can set it later.',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'Go back',
+        confirmButtonColor: '#2563eb'
+      });
+
+      if (!result.isConfirmed) {
+        return;
+      }
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.saveAvailabilityStep(parseInt(tutorId), formData);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Availability saved successfully',
+          confirmButtonText: 'Continue',
+          confirmButtonColor: '#2563eb',
+          allowOutsideClick: false
+        });
+
+        onNext();
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save availability',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8">

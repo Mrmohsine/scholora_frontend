@@ -1,18 +1,21 @@
-// components/tutor-registration/steps/PricingStep.tsx
 'use client';
 
 import { useState } from 'react';
 import { Info, ChevronUp, Check } from 'lucide-react';
+import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
+import Swal from 'sweetalert2';
 
 interface PricingStepProps {
   formData: {
     hourlyRate?: string;
   };
   onUpdate: (data: any) => void;
+  onSubmit: () => void;
 }
 
-const PricingStep = ({ formData, onUpdate }: PricingStepProps) => {
+const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
   const [showCommissionDetails, setShowCommissionDetails] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const commissionRates = [
     { hours: '0 - 20 hours', rate: '33%' },
@@ -24,6 +27,103 @@ const PricingStep = ({ formData, onUpdate }: PricingStepProps) => {
 
   const handlePriceChange = (value: string) => {
     onUpdate({ hourlyRate: value });
+  };
+
+  const handleSaveDraft = async () => {
+    if (!formData.hourlyRate || parseFloat(formData.hourlyRate) < 1) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No price set',
+        text: 'Please set your hourly rate first'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await tutorRegistrationApi.savePricingStep(parseInt(tutorId), formData.hourlyRate);
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Draft Saved!',
+          text: 'Your pricing has been saved',
+          confirmButtonColor: '#2563eb'
+        });
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to save pricing'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitProfile = async () => {
+    if (!formData.hourlyRate || parseFloat(formData.hourlyRate) < 1) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'No price set',
+        text: 'Please set your hourly rate to submit'
+      });
+      return;
+    }
+
+    const tutorId = localStorage.getItem('tutor_id');
+    if (!tutorId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please complete step 1 first.'
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Save pricing first
+      await tutorRegistrationApi.savePricingStep(parseInt(tutorId), formData.hourlyRate);
+      
+      // Then submit profile
+      const response = await tutorRegistrationApi.submitProfile(parseInt(tutorId));
+      
+      if (response.success) {
+        await Swal.fire({
+          icon: 'success',
+          title: 'Application Submitted!',
+          html: `
+            <p>Your tutor profile has been submitted for review.</p>
+            <p class="mt-2">Our team will review your application and get back to you soon.</p>
+          `,
+          confirmButtonText: 'Done',
+          confirmButtonColor: '#10b981'
+        });
+
+        onSubmit();
+      }
+    } catch (error: any) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response?.data?.message || 'Failed to submit application',
+        confirmButtonColor: '#ef4444'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -43,6 +143,7 @@ const PricingStep = ({ formData, onUpdate }: PricingStepProps) => {
             placeholder="35"
             min="1"
             max="200"
+            disabled={loading}
           />
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
             <Info className="w-5 h-5 text-gray-400" />
@@ -148,6 +249,26 @@ const PricingStep = ({ formData, onUpdate }: PricingStepProps) => {
           </div>
         </div>
       )}
+
+      {/* Buttons */}
+      <div className="flex justify-between pt-6">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          disabled={loading}
+          className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Saving...' : 'Save Draft'}
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmitProfile}
+          disabled={loading}
+          className="px-8 py-3 bg-green-600 text-white rounded-xl font-semibold hover:bg-green-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Submitting...' : 'Submit Application'}
+        </button>
+      </div>
     </div>
   );
 };
