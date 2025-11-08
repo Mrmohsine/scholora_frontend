@@ -86,12 +86,12 @@ export default function RegistrationSuccessPage() {
 
         {/* Contact Support */}
         <div className="text-center mt-8 text-gray-600">
-          <p>Have questions?{' '}
-            <a href="mailto:support@scholora.ma" className="text-blue-600 hover:underline font-medium">
-              Contact Support
-            </a>
-          </p>
-        </div>
+        <p>Have questions?{' '}
+          <Link href="/contact" className="text-blue-600 hover:underline font-medium">
+            Contact Support
+          </Link>
+        </p>
+      </div>
       </div>
     </div>
   );

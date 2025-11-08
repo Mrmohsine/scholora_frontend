@@ -12,6 +12,7 @@ export default function HomePage() {
    const [email, setEmail] = useState("");
    const [loading, setLoading] = useState(false);
    const [message, setMessage] = useState("");
+   const [error, setError] = useState("");
    const videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
    const [timeLeft, setTimeLeft] = useState({
@@ -55,35 +56,48 @@ export default function HomePage() {
      return () => clearInterval(interval);
    }, []);
 
-   const handleSubmit = async (e: React.FormEvent) => {
-     e.preventDefault();
-     setLoading(true);
-     setMessage("");
 
-     try {
-       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/newsletters`, {
-         method: "POST",
-         headers: {
-           "Content-Type": "application/json",
-         },
-         body: JSON.stringify({ email }),
-       });
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+      setMessage("");
+      setError("");
 
-       if (res.ok) {
-         setMessage("Email ajouté avec succès!");
-         setEmail("");
-       } else {
-         const data = await res.json();
-         setMessage(data.message || "Erreur");
-       }
-     } catch (error) {
-       console.error(error);
-       setMessage("Erreur de connexion");
-     } finally {
-       setLoading(false);
-     }
-   };
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/newsletters`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
 
+        const data = await res.json();
+        console.log('Response:', data); // DEBUG
+
+        if (res.ok) {
+          setMessage("Email added successfully!");
+          setEmail("");
+        } else {
+          // Check plusieurs formats possibles
+          const errorMsg = data.message || data.error || '';
+          const emailError = data.errors?.email?.[0] || '';
+          
+          if (errorMsg.toLowerCase().includes('already') || 
+              errorMsg.toLowerCase().includes('taken') ||
+              errorMsg.toLowerCase().includes('existe') ||
+              emailError.toLowerCase().includes('already') ||
+              emailError.toLowerCase().includes('taken')) {
+            setError("This email is already subscribed!");
+          } else {
+            setError(errorMsg || emailError || "Error occurred");
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        setError("Connection error");
+      } finally {
+        setLoading(false);
+      }
+    };
   return (
     <div className="min-h-screen bg-white font-sans">
       <Header />
@@ -128,7 +142,8 @@ export default function HomePage() {
                     className="border border-gray-300 text-gray-700 font-medium px-4 py-3 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[220px] text-sm"
                   />
                 </div>
-                {message && <p className="text-sm text-green-600 font-medium">{message}</p>}
+                {message && <p className="mt-3 text-sm text-green-400 font-medium">{message}</p>}
+                {error && <p className="mt-3 text-sm text-red-400 font-medium">{error}</p>}
               </form>
             </div>
 
@@ -242,7 +257,7 @@ export default function HomePage() {
   </div>
 </section>
 
-      <section className="py-16 bg-white">
+      <section id="tutors" className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="mb-4">
@@ -350,7 +365,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
+      <section id="success-stories" className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="mb-4">
@@ -453,7 +468,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
+      <section id="subjects" className="py-16 bg-gray-50">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="rounded-3xl p-8" style={{ backgroundColor: '#0066ab' }}>
             <div className="text-center mb-12">
@@ -544,7 +559,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section id="newsletter" className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-purple-600 rounded-2xl p-8 text-center shadow-xl">
             <div className="mb-6">
@@ -576,13 +591,10 @@ export default function HomePage() {
                   {loading ? 'Sending...' : 'Subscribe'}
                 </button>
               </div>
-              {message && (
-                <p className="mt-3 text-sm text-white font-medium">
-                  {message}
-                </p>
-              )}
+                {message && <p className="mt-3 text-sm text-green-400 font-medium">{message}</p>}
+                {error && <p className="mt-3 text-sm text-red-400 font-medium">{error}</p>}
             </form>
-            
+
             <p className="text-blue-200 text-sm">
               By subscribing to our newsletter, Terms & Privacy
             </p>
