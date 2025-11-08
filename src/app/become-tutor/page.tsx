@@ -5,6 +5,7 @@ import { ChevronDown, Check } from 'lucide-react';
 import Image from 'next/image';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import Link from "next/link";
 
 const BecomeTutorPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -72,7 +73,9 @@ const BecomeTutorPage = () => {
               </div>
               
               <button className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg">
-                Create a tutor profile now
+                <Link href="/tutor-registration">
+                  Create a tutor profile now
+                </Link>
               </button>
             </div>
             
@@ -163,7 +166,9 @@ const BecomeTutorPage = () => {
               </div>
               
               <button className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg">
-                Create a tutor profile now
+                <Link href="/tutor-registration">
+                  Create a tutor profile now
+                </Link>
               </button>
             </div>
             
@@ -214,8 +219,10 @@ const BecomeTutorPage = () => {
                   <p className="text-xl font-semibold text-gray-900">Krista A.</p>
                   <p className="text-gray-600 text-lg">English tutor</p>
                 </div>
-                <button className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg">
-                  Create a tutor profile now
+                  <button className="bg-blue-400 hover:bg-blue-500 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg">
+                  <Link href="/tutor-registration">
+                    Create a tutor profile now
+                  </Link>
                 </button>
               </div>
               
@@ -266,11 +273,11 @@ const BecomeTutorPage = () => {
           <div className="text-center mt-12 text-gray-600 text-lg">
             <p>
               Have more questions?{' '}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold">
+              <a href="/contact" className="text-blue-600 hover:text-blue-700 font-semibold">
                 Check our Help center
               </a>{' '}
               or{' '}
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-semibold">
+              <a href="/contact" className="text-blue-600 hover:text-blue-700 font-semibold">
                 contact our support team
               </a>
             </p>
@@ -300,7 +307,9 @@ const BecomeTutorPage = () => {
                   Connect with thousands of learners around the world and teach from your living room
                 </p>
                 <button className="bg-black hover:bg-gray-800 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-200 shadow-lg inline-block">
-                  Create a tutor profile now
+                  <Link href="/tutor-registration">
+                    Create a tutor profile now
+                  </Link>
                 </button>
               </div>
             </div>
