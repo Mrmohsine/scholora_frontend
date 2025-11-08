@@ -19,7 +19,7 @@ export function formatNumber(num: number): string {
 }
 
 // Formatage de la monnaie
-export function formatCurrency(amount: number, currency: string = 'USD'): string {
+export function formatCurrency(amount: number, currency: string = 'MAD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,

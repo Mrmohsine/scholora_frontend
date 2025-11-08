@@ -194,7 +194,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
             type="text"
             value={formData.firstName}
             onChange={(e) => onUpdate({ firstName: e.target.value })}
-            className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all ${
+            className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all text-gray-900 ${
               errors.firstName ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
             }`}
             placeholder="Enter your first name"
@@ -209,7 +209,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
             type="text"
             value={formData.lastName}
             onChange={(e) => onUpdate({ lastName: e.target.value })}
-            className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all ${
+            className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all text-gray-900 ${
               errors.lastName ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
             }`}
             placeholder="Enter your last name"
@@ -225,7 +225,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
           type="email"
           value={formData.email}
           onChange={(e) => onUpdate({ email: e.target.value })}
-          className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all ${
+          className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none transition-all text-gray-900 ${
             errors.email ? 'border-red-500' : 'border-gray-200 focus:border-blue-500'
           }`}
           placeholder="your.email@example.com"
@@ -241,7 +241,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
             <select
               value={formData.country}
               onChange={(e) => onUpdate({ country: e.target.value })}
-              className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none appearance-none ${
+              className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none appearance-none text-gray-900 ${
                 errors.country ? 'border-red-500' : 'border-gray-200'
               }`}
               disabled={loading}
@@ -251,7 +251,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
                 <option key={country} value={country}>{country}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none text-gray-900" />
           </div>
           {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
         </div>
@@ -262,7 +262,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
             <select
               value={formData.subject}
               onChange={(e) => onUpdate({ subject: e.target.value })}
-              className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none appearance-none ${
+              className={`w-full px-4 py-4 border-2 rounded-xl focus:ring-4 outline-none appearance-none text-gray-900 ${
                 errors.subject ? 'border-red-500' : 'border-gray-200'
               }`}
               disabled={loading}
@@ -272,7 +272,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
                 <option key={subject} value={subject}>{subject}</option>
               ))}
             </select>
-            <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+            <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none text-gray-900" />
           </div>
           {errors.subject && <p className="text-red-500 text-sm mt-1">{errors.subject}</p>}
         </div>
@@ -287,7 +287,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
                 <select
                   value={lang.language}
                   onChange={(e) => updateLanguage(index, 'language', e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none appearance-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none appearance-none text-gray-900"
                   disabled={loading}
                 >
                   <option value="">Select language</option>
@@ -301,7 +301,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
                 <select
                   value={lang.level}
                   onChange={(e) => updateLanguage(index, 'level', e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none appearance-none"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 outline-none appearance-none text-gray-900"
                   disabled={loading}
                 >
                   <option value="">Level</option>
@@ -309,7 +309,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
                     <option key={level} value={level}>{level}</option>
                   ))}
                 </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none text-gray-900" />
               </div>
               {formData.languages.length > 1 && (
                 <button 
@@ -341,7 +341,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
           type="tel"
           value={formData.phone}
           onChange={(e) => onUpdate({ phone: e.target.value })}
-          className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 outline-none"
+          className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 outline-none text-gray-900"
           placeholder="+212 777 777 799"
           disabled={loading}
         />

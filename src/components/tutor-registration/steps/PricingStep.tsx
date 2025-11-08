@@ -149,7 +149,7 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
             <Info className="w-5 h-5 text-gray-400" />
           </div>
         </div>
-        <p className="text-center text-gray-500 text-sm mt-2">Price in USD only</p>
+        <p className="text-center text-gray-500 text-sm mt-2">Price in MAD only</p>
       </div>
 
       {/* Preply Commission Section */}

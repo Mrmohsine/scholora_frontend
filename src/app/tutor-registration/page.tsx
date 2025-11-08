@@ -43,7 +43,7 @@ export default function TutorRegistrationPage() {
    timezone: '',
    // Pricing step
    hourlyRate: '',
-   currency: 'USD',
+   currency: 'MAD',
  });
 
  const steps = [
