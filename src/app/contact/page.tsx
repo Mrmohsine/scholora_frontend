@@ -1,36 +1,56 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Send, Mail, Phone, MapPin } from 'lucide-react';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import { useState } from "react";
+import { Send, Mail, Phone, MapPin } from "lucide-react";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function ContactSupport() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+    setError(null);
 
-      if (response.ok) {
-        setSuccess(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setTimeout(() => setSuccess(false), 5000);
+    if (formData.message.trim().length < 10) {
+      setError('Message must be at least 10 characters.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      // const data = await response.json();
+
+      if (!response.ok) {
+        setError('Something went wrong.');
+        return;
       }
+
+      setSuccess(true);
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setTimeout(() => setSuccess(false), 5000);
     } catch (error) {
       console.error(error);
     } finally {
@@ -43,15 +63,15 @@ export default function ContactSupport() {
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
         {/* Header Banner */}
-       <div className="bg-[#0266AB] text-white py-16">
-            <div className="container mx-auto px-4">
-                <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
-                How Can We Help You?
-                </h1>
-                <p className="text-xl text-center text-blue-100 max-w-2xl mx-auto">
-                Our team is here to support you on your learning journey
-                </p>
-            </div>
+        <div className="bg-[#0266AB] text-white py-16">
+          <div className="container mx-auto px-4">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
+              How Can We Help You?
+            </h1>
+            <p className="text-xl text-center text-blue-100 max-w-2xl mx-auto">
+              Our team is here to support you on your learning journey
+            </p>
+          </div>
         </div>
 
         <div className="container mx-auto px-4 py-12 max-w-6xl">
@@ -59,8 +79,10 @@ export default function ContactSupport() {
             {/* Contact Info */}
             <div className="space-y-6">
               <div className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-6">Contact Us</h3>
-                
+                <h3 className="text-xl font-bold text-gray-800 mb-6">
+                  Contact Us
+                </h3>
+
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -68,7 +90,10 @@ export default function ContactSupport() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-800">Email</p>
-                      <a href="mailto:support@scholora.ma" className="text-blue-600">
+                      <a
+                        href="mailto:support@scholora.ma"
+                        className="text-blue-600"
+                      >
                         support@scholora.ma
                       </a>
                     </div>
@@ -92,7 +117,9 @@ export default function ContactSupport() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-800">Address</p>
-                      <p className="text-gray-600 text-sm">Casablanca, Morocco</p>
+                      <p className="text-gray-600 text-sm">
+                        Casablanca, Morocco
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -105,7 +132,9 @@ export default function ContactSupport() {
                 </p>
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
                   <p className="font-semibold">Business Hours</p>
-                  <p className="text-sm text-blue-100 mt-1">Mon - Fri: 9am - 6pm</p>
+                  <p className="text-sm text-blue-100 mt-1">
+                    Mon - Fri: 9am - 6pm
+                  </p>
                   <p className="text-sm text-blue-100">Sat: 9am - 1pm</p>
                 </div>
               </div>
@@ -121,7 +150,15 @@ export default function ContactSupport() {
                 {success && (
                   <div className="mb-6 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4">
                     <p className="font-medium">✓ Message sent successfully!</p>
-                    <p className="text-sm mt-1">We'll get back to you as soon as possible.</p>
+                    <p className="text-sm mt-1">
+                      We&apos;ll get back to you as soon as possible.
+                    </p>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="mb-6 bg-red-50 border border-red-200 text-red-800 rounded-xl p-4">
+                    {error}
                   </div>
                 )}
 
@@ -135,8 +172,10 @@ export default function ContactSupport() {
                         type="text"
                         required
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        className="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Your name"
                       />
                     </div>
@@ -149,8 +188,10 @@ export default function ContactSupport() {
                         type="email"
                         required
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        className="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -164,8 +205,10 @@ export default function ContactSupport() {
                       type="text"
                       required
                       value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onChange={(e) =>
+                        setFormData({ ...formData, subject: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="What is this about?"
                     />
                   </div>
@@ -178,16 +221,20 @@ export default function ContactSupport() {
                       required
                       rows={6}
                       value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      onChange={(e) =>
+                        setFormData({ ...formData, message: e.target.value })
+                      }
+                      className="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                       placeholder="Describe your request in detail..."
                     />
-                    <p className="text-xs text-gray-500 mt-2">Minimum 10 characters</p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Minimum 10 characters
+                    </p>
                   </div>
 
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || formData.message.trim().length < 10}
                     className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 flex items-center justify-center space-x-2 shadow-lg"
                   >
                     {loading ? (
@@ -207,33 +254,44 @@ export default function ContactSupport() {
 
               {/* FAQ Section */}
               <div className="mt-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 border border-gray-200">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Frequently Asked Questions</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Frequently Asked Questions
+                </h3>
                 <div className="space-y-3">
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
                       How do I book a tutoring session?
-                      <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                      <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                        ▼
+                      </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      Browse our list of tutors, select the one that fits your needs, and book directly through their calendar.
+                      Browse our list of tutors, select the one that fits your
+                      needs, and book directly through their calendar.
                     </p>
                   </details>
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
                       What payment methods do you accept?
-                      <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                      <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                        ▼
+                      </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      We accept credit cards, bank transfers, and mobile payments.
+                      We accept credit cards, bank transfers, and mobile
+                      payments.
                     </p>
                   </details>
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
                       Can I cancel a booking?
-                      <span className="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
+                      <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                        ▼
+                      </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      Yes, you can cancel up to 24 hours before the session for a full refund.
+                      Yes, you can cancel up to 24 hours before the session for
+                      a full refund.
                     </p>
                   </details>
                 </div>
