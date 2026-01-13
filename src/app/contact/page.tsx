@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function ContactSupport() {
   const [formData, setFormData] = useState({
@@ -15,15 +16,20 @@ export default function ContactSupport() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+    if (!executeRecaptcha) {
+    setError("Captcha not ready");
+    return;
+  }
     setError(null);
+    const captchaToken = await executeRecaptcha("contact_form");
 
     if (formData.message.trim().length < 10) {
-      setError('Message must be at least 10 characters.');
+      setError("Message must be at least 10 characters.");
       setLoading(false);
       return;
     }
@@ -37,14 +43,17 @@ export default function ContactSupport() {
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+          ...formData,
+          captchaToken, 
+        }),
         }
       );
 
       // const data = await response.json();
 
       if (!response.ok) {
-        setError('Something went wrong.');
+        setError("Something went wrong.");
         return;
       }
 
@@ -106,7 +115,7 @@ export default function ContactSupport() {
                     <div>
                       <p className="font-medium text-gray-800">Phone</p>
                       <a href="tel:+212500000000" className="text-green-600">
-                        +212 5 00 00 00 00
+                        +212 644-663792
                       </a>
                     </div>
                   </div>
@@ -257,41 +266,74 @@ export default function ContactSupport() {
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   Frequently Asked Questions
                 </h3>
+
                 <div className="space-y-3">
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
-                      How do I book a tutoring session?
+                      How does Scholora ensure tutor quality?
                       <span className="text-gray-400 group-open:rotate-180 transition-transform">
                         ▼
                       </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      Browse our list of tutors, select the one that fits your
-                      needs, and book directly through their calendar.
+                      All tutors on Scholora are carefully reviewed for their
+                      qualifications, experience, and subject expertise before
+                      being listed on the platform.
                     </p>
                   </details>
+
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
-                      What payment methods do you accept?
+                      Can parents track student progress?
                       <span className="text-gray-400 group-open:rotate-180 transition-transform">
                         ▼
                       </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      We accept credit cards, bank transfers, and mobile
-                      payments.
+                      Yes. Parents can monitor learning progress, session
+                      history, and engagement to stay informed and support their
+                      child’s learning journey.
                     </p>
                   </details>
+
                   <details className="bg-white rounded-lg p-4 cursor-pointer group">
                     <summary className="font-medium text-gray-800 flex items-center justify-between">
-                      Can I cancel a booking?
+                      Can students try Scholora before committing?
                       <span className="text-gray-400 group-open:rotate-180 transition-transform">
                         ▼
                       </span>
                     </summary>
                     <p className="text-gray-600 text-sm mt-3">
-                      Yes, you can cancel up to 24 hours before the session for
-                      a full refund.
+                      Yes. Students can preview a tutor’s teaching style and
+                      approach before booking, ensuring they find the right fit
+                      for their learning needs.
+                    </p>
+                  </details>
+
+                  <details className="bg-white rounded-lg p-4 cursor-pointer group">
+                    <summary className="font-medium text-gray-800 flex items-center justify-between">
+                      Can I learn multiple subjects at once?
+                      <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                        ▼
+                      </span>
+                    </summary>
+                    <p className="text-gray-600 text-sm mt-3">
+                      Yes. Students can book sessions in different subjects and
+                      organize their learning schedule all in one platform.
+                    </p>
+                  </details>
+
+                  <details className="bg-white rounded-lg p-4 cursor-pointer group">
+                    <summary className="font-medium text-gray-800 flex items-center justify-between">
+                      How does Scholora help my child succeed with technology?
+                      <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                        ▼
+                      </span>
+                    </summary>
+                    <p className="text-gray-600 text-sm mt-3">
+                      Scholora uses smart tools to personalize learning, track
+                      progress, and provide guidance. This helps students study
+                      efficiently and achieve better results.
                     </p>
                   </details>
                 </div>
