@@ -7,11 +7,11 @@ const Footer = () => {
       title: 'Explore',
       links: [
         { name: 'Featured Tutors', href: '#tutors' },
-        { name: 'Popular Subjects', href: '#subjects' },
+        { name: 'Popular Subjects', href: '#subject1' },
         { name: 'Success Stories', href: '#success-stories' },
       ],
     },
-    {
+    {    
       title: 'Company',
       links: [
         { name: 'About', href: '/about' },
