@@ -1,10 +1,11 @@
 // components/student/DashboardHeader.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Search, Bell, LogOut } from 'lucide-react';
-import { authService } from '@/lib/auth/authService';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { Search, Bell, LogOut } from "lucide-react";
+import { authService } from "@/lib/auth/authService";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
   user?: {
@@ -15,15 +16,16 @@ interface DashboardHeaderProps {
 }
 
 export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
       await authService.logout();
-      router.push('/auth/login');
+      router.push("/auth/login");
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -47,34 +49,64 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
         {/* Right Section - Icons */}
         <div className="flex items-center space-x-4">
           {/* Notifications */}
-          <div className="relative">
-            <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full text-white text-xs flex items-center justify-center">
-                1
-              </span>
-            </button>
-          </div>
+          <button className="relative p-2 text-gray-400 hover:text-gray-600">
+            <Bell className="w-5 h-5" />
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full text-white text-xs flex items-center justify-center">
+              1
+            </span>
+          </button>
 
-          {/* User Profile */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+          {/* Profile + Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="w-8 h-8 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center cursor-pointer"
+            >
               {user?.avatar ? (
-                <img src={user.avatar} alt="Profile" className="w-8 h-8 rounded-full object-cover" />
+                <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <span className="text-gray-600 font-medium text-sm">
-                  {user?.first_name?.charAt(0) || 'U'}
+                <span className="text-sm font-medium uppercase">
+                  {user?.first_name?.charAt(0) || "U"}
                 </span>
               )}
-            </div>
-            
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 px-3 py-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <LogOut className="w-4 h-4" />
             </button>
+
+            {open && (
+              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border z-50">
+                <div className="px-4 py-3 border-b">
+                  <p className="text-sm font-semibold text-black">
+                    {user?.first_name} {user?.last_name}
+                  </p>
+                </div>
+
+                <div className="py-1">
+                  <Link
+                    href="/student-portal/profile"
+                    onClick={() => setOpen(false)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 text-black"
+                  >
+                    My profile
+                  </Link>
+                  <Link
+                    href="/student-portal/settings"
+                    onClick={() => setOpen(false)}
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 text-black"
+                  >
+                    Settings
+                  </Link>
+                </div>
+
+              </div>
+            )}
           </div>
+
+          {/* Optional standalone logout (remove if you want clean UX) */}
+          <button
+            onClick={handleLogout}
+            className="p-2 text-gray-500 hover:text-gray-800"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </header>
