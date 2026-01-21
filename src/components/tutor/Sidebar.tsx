@@ -2,7 +2,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { 
  LayoutDashboard, 
  BookOpen, 
@@ -11,8 +11,10 @@ import {
  MessageCircle, 
  Users, 
  BarChart3, 
- Settings 
+ Settings, 
+ LogOut
 } from 'lucide-react';
+import { authService } from '@/lib/auth/authService';
 
 interface SidebarItem {
  name: string;
@@ -32,10 +34,19 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export default function TutorSidebar() {
- const pathname = usePathname();
+  const pathname = usePathname();
+  const router = useRouter();
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
  return (
-   <div className="flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen">
+   <div className="flex flex-col w-64 bg-white border-r border-gray-200 max-h-screen sticky top-0">
      {/* Logo */}
     <div className="flex items-center px-6 border-b border-gray-200">
         <Link href="/" className="flex items-center">
@@ -72,6 +83,16 @@ export default function TutorSidebar() {
          );
        })}
      </nav>
+     {/* Logout (Bottom) */}
+      <div className="px-4 py-4 border-t border-gray-200">
+        <button
+          className="flex w-full items-center px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+          onClick={handleLogout}
+        >
+          <LogOut className="w-4 h-4 mr-3" />
+          Logout
+        </button>
+      </div>
    </div>
  );
 }

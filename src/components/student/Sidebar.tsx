@@ -37,7 +37,6 @@ const sidebarItems: SidebarItem[] = [
   { name: "Tutors", href: "/student-portal/tutors", icon: Users },
   { name: "Stats", href: "/student-portal/stats", icon: BarChart3 },
   { name: "Settings", href: "/student-portal/settings", icon: Settings },
-  { name: "Profile", href: "/student-portal/profile", icon: User },
 ];
 
 export default function StudentSidebar() {
@@ -45,13 +44,13 @@ export default function StudentSidebar() {
   const router = useRouter();
 
   const handleLogout = async () => {
-      try {
-        await authService.logout();
-        router.push('/auth/login');
-      } catch (error) {
-        console.error('Logout error:', error);
-      }
-    };
+    try {
+      await authService.logout();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
   return (
     <div className="flex flex-col w-64 bg-white border-r border-gray-200 max-h-screen sticky top-0">
       {/* Logo */}

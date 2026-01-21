@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import StudentSidebar from '@/components/student/Sidebar';
-import StudentDashboardHeader from '@/components/student/Dashboard/DashboardHeader';
+import TutorSidebar from '@/components/tutor/Sidebar';
+import TutorDashboardHeader from '@/components/tutor/Dashboard/DashboardHeader';
 import { authService } from '@/lib/auth/authService';
 import { Eye, EyeOff } from "lucide-react";
 
-function StudentSettingsContent() {
+function TutorSettingsContent() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [passwordData, setPasswordData] = useState({
@@ -64,12 +64,12 @@ function StudentSettingsContent() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
-      <StudentSidebar />
+      <TutorSidebar />
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <StudentDashboardHeader user={user} />
+        <TutorDashboardHeader user={user} />
         
         {/* Settings Content */}
         <main className="flex-1 p-6">
@@ -315,10 +315,10 @@ function StudentSettingsContent() {
   );
 }
 
-export default function StudentSettingsPage() {
+export default function TutorSettingsPage() {
   return (
-    <ProtectedRoute allowedRoles={['student']}>
-      <StudentSettingsContent />
+    <ProtectedRoute allowedRoles={['tutor']}>
+      <TutorSettingsContent />
     </ProtectedRoute>
   );
 }

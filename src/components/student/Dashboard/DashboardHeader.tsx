@@ -6,12 +6,14 @@ import { Search, Bell, LogOut } from "lucide-react";
 import { authService } from "@/lib/auth/authService";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { logout } from "@/utils/auth";
 
 interface DashboardHeaderProps {
   user?: {
     first_name: string;
     last_name: string;
     avatar?: string;
+    email?: string;
   };
 }
 
@@ -28,7 +30,6 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
       console.error("Logout error:", error);
     }
   };
-
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -37,7 +38,9 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
           <div className="relative max-w-md w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
-              type="text"
+              type="search"
+              autoComplete="off"
+              name="app-search"
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -73,10 +76,22 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
 
             {open && (
               <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border z-50">
-                <div className="px-4 py-3 border-b">
-                  <p className="text-sm font-semibold text-black">
-                    {user?.first_name} {user?.last_name}
-                  </p>
+                <div className="px-4 py-3 border-b flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full overflow-hidden flex items-center justify-center mb-2">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-sm font-medium uppercase">
+                        {user?.first_name?.charAt(0) || "U"}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-1 flex-col">
+                    <p className="text-sm font-semibold text-black">
+                      {user?.first_name} {user?.last_name}
+                    </p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
+                  </div>
                 </div>
 
                 <div className="py-1">
@@ -95,18 +110,19 @@ export default function StudentDashboardHeader({ user }: DashboardHeaderProps) {
                     Settings
                   </Link>
                 </div>
-
+                <div className="border-t">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Optional standalone logout (remove if you want clean UX) */}
-          <button
-            onClick={handleLogout}
-            className="p-2 text-gray-500 hover:text-gray-800"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+          
         </div>
       </div>
     </header>
