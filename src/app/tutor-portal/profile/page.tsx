@@ -14,18 +14,19 @@ function TutorProfileContent() {
     lastName: "",
     email: "",
     phone: "",
+    address: "",
   });
 
   useEffect(() => {
     const userData = authService.getUser();
     if (userData) {
       setUser(userData);
-
       setFormData({
         firstName: userData.first_name ?? "",
         lastName: userData.last_name ?? "",
         email: userData.email ?? "",
         phone: userData.phone ?? "",
+        address: userData.address ?? "",
       });
     }
 
@@ -40,8 +41,24 @@ function TutorProfileContent() {
     );
   }
 
-  const handleProfileSubmit = () => {
-    // Handle profile update
+  const handleProfileSubmit = async () => {
+    console.log("Submitting profile with data:", formData);
+    try {
+      await authService.updateProfile({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+      });
+
+      const fresh =  authService.getUser();
+      setUser(fresh);
+
+      alert("Profile updated");
+    } catch (e: any) {
+      alert(e.message || "Update failed");
+    }
   };
 
   return (
@@ -60,7 +77,7 @@ function TutorProfileContent() {
             {/* Save Button */}
             <button
               onClick={handleProfileSubmit}
-              className="absolute top-8 right-8 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium"
+              className="absolute top-8 right-8 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 text-sm font-medium cursor-pointer"
             >
               Save Changes
             </button>
@@ -149,6 +166,12 @@ function TutorProfileContent() {
                 </label>
                 <input
                   type="text"
+                  name="profile-address"
+                  autoComplete="off"
+                  value={formData.address}
+                  onChange={(e) =>
+                    setFormData({ ...formData, address: e.target.value })
+                  }
                   placeholder="Your Address"
                   className="w-full bg-gray-50 px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 text-black"
                 />

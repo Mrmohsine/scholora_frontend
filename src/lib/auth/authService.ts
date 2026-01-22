@@ -74,7 +74,28 @@ class AuthService {
    );
    return response.data;
  }
+  async updateProfile(data: {
+    first_name: string;
+    last_name: string;
+    email?: string;
+    phone?: string;
+    address?: string;
+  }) {
+    const response = await this.makeRequest<{ success: boolean; data: User }>(
+      "/auth/profile",
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }
+    );
 
+    // Keep localStorage in sync with backend truth
+    if (response.success) {
+      this.setUser(response.data);
+    }
+
+    return response.data;
+  }
  getToken(): string | null {
    if (typeof window === 'undefined') return null;
    return localStorage.getItem(AUTH_CONFIG.TOKEN_KEY);
