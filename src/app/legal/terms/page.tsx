@@ -13,6 +13,7 @@ import {
   BookOpen,
   Flag
 } from 'lucide-react';
+import Header from '@/components/layout/Header';
 
 const TermsOfServicePage: React.FC = () => {
   const sections = [
@@ -92,6 +93,7 @@ const TermsOfServicePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Header></Header>
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">
