@@ -597,6 +597,8 @@ export default function HomePage() {
 
             <p className="text-blue-200 text-sm">
               By subscribing to our newsletter, Terms & Privacy
+               <a href="/legal/terms">Terms</a>&
+              <a href="/legal/privacy">Privacy</a> 
             </p>
           </div>
         </div>
