@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { authService } from '@/lib/auth/authService';
+import { FaApple } from "react-icons/fa";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -73,6 +74,7 @@ export default function LoginPage() {
             
             <button className="w-full flex items-center justify-center space-x-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <span className="text-black font-bold">🍎</span>
+              <FaApple className="text-black text-xl" />
               <span className="font-medium text-gray-700">Continue with Apple</span>
             </button>
           </div>
