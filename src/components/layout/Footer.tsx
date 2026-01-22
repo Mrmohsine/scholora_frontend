@@ -73,6 +73,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-16 pt-8 text-center">
           <p className="text-gray-400 font-medium">
             © 2025 Scholora. All rights reserved. Made with ❤️ in Morocco
+            © 2026 Scholora. All rights reserved. Proudly built in Morocco.
           </p>
         </div>
       </div>
