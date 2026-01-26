@@ -65,7 +65,7 @@ export default function HomePage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/newsletters`,
+        `${process.env.NEXT_PUBLIC_API_URL}/newsletters`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -12,10 +12,11 @@ export default function StudentSignUpPage() {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: "",
+    last_name: '',
     email: '',
     password: '',
-    rememberMe: false,
+    role: "student",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -23,19 +24,22 @@ export default function StudentSignUpPage() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:8000/api/students/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("http://localhost:8000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
-
+      console.log("Response data:", data);
       if (res.ok) {
         // ✅ Succès — inscription réussie
         await Swal.fire({
           title: 'Inscription réussie 🎉',
-          text: `Bienvenue ${data.student.name}!`,
+          text: `Bienvenue ${data.user.last_name}!`,
           icon: 'success',
           confirmButtonText: 'Aller à la connexion',
         });
@@ -115,16 +119,31 @@ export default function StudentSignUpPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">
-                Name
+                Last name
               </label>
               <input
                 type="text"
-                value={formData.name}
+                value={formData.last_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, last_name: e.target.value })
                 }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
-                placeholder="Your name"
+                placeholder="Your last name"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                First name
+              </label>
+              <input
+                type="text"
+                value={formData.first_name}
+                onChange={(e) =>
+                  setFormData({ ...formData, first_name: e.target.value })
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-900"
+                placeholder="Your first name"
                 required
               />
             </div>
@@ -172,21 +191,6 @@ export default function StudentSignUpPage() {
                   )}
                 </button>
               </div>
-            </div>
-
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="remember"
-                checked={formData.rememberMe}
-                onChange={(e) =>
-                  setFormData({ ...formData, rememberMe: e.target.checked })
-                }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label htmlFor="remember" className="ml-2 text-sm text-gray-900">
-                Remember me
-              </label>
             </div>
 
             <button

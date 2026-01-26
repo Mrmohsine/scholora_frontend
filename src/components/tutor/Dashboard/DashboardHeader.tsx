@@ -35,7 +35,7 @@ export default function TutorDashboardHeader({ user }: DashboardHeaderProps) {
         {/* Left Section - Greeting */}
         <div>
           <h1 className="text-xl font-semibold text-gray-900">
-            Good morning, Dr. Johnson!
+            Good morning, {user?.first_name} {user?.last_name || "Dr. Johnson"}!
           </h1>
           <p className="text-gray-600 text-sm">
             You have <span className="text-blue-600 font-medium">3 classes</span> scheduled for today
