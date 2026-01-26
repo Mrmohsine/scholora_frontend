@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 export const tutorRegistrationApi = {
   saveAboutStep: async (data: any) => {
-    const response = await axios.post(`${API_URL}/api/tutor-registration/about`, data);
+    const response = await axios.post(`${API_URL}/tutor-registration/about`, data);
     return response.data;
   },
 
@@ -13,7 +13,7 @@ export const tutorRegistrationApi = {
     formData.append('tutorId', tutorId.toString());
     formData.append('photo', photo);
     
-    const response = await axios.post(`${API_URL}/api/tutor-registration/photo`, formData, {
+    const response = await axios.post(`${API_URL}/tutor-registration/photo`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
