@@ -145,7 +145,7 @@ const TutorsPage = () => {
                     {tutor.monthlyRate} MAD/month
                   </div>
                   <Link href="/tutors/tutor-detail">
-                    <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer">
                         View Profile
                     </button>
                    </Link>

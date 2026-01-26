@@ -272,89 +272,93 @@ export default function HomePage() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-purple-400 flex items-center justify-center relative">
-                  <span className="text-2xl text-gray-400">?</span>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">!</span>
+             <Link href="/tutors">
+              <div className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-purple-400 flex items-center justify-center relative">
+                    <span className="text-2xl text-gray-400">?</span>
+                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">!</span>
+                    </div>
                   </div>
                 </div>
+                
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Physics Tutor</h3>
+                <div className="text-sm text-gray-600 mb-1"><b>Level:</b> 2BAC</div>
+                <div className="text-sm text-blue-600 font-medium mb-4">PhD Research</div>
+                
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                  <span className="ml-1 text-sm text-gray-600">(5.0)</span>
+                </div>
+                
+                <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                  <span className="mr-2">🔒</span>
+                  Reveal Identity
+                  <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+                </button>
               </div>
-              
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Physics Tutor</h3>
-              <div className="text-sm text-gray-600 mb-1"><b>Level:</b> 2BAC</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">PhD Research</div>
-              
-              <div className="flex justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                ))}
-                <span className="ml-1 text-sm text-gray-600">(5.0)</span>
-              </div>
-              
-              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
-                <span className="mr-2">🔒</span>
-                Reveal Identity
-                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
-              </button>
-            </div>
-
-            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-cyan-400 flex items-center justify-center relative">
-                  <span className="text-2xl text-gray-400">?</span>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">!</span>
+             </Link>
+             <Link href="/tutors">
+              <div className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-cyan-400 flex items-center justify-center relative">
+                    <span className="text-2xl text-gray-400">?</span>
+                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">!</span>
+                    </div>
                   </div>
                 </div>
+                
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Information Technology Tutor</h3>
+                <div className="text-sm text-gray-600 mb-1"><b>Level:</b> University Preparation</div>
+                <div className="text-sm text-blue-600 font-medium mb-4">ENSET Professor</div>
+                
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                  <span className="ml-1 text-sm text-gray-600">(4.9)</span>
+                </div>
+                
+                <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                  <span className="mr-2">🔒</span>
+                  Reveal Identity
+                  <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+                </button>
               </div>
-              
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Information Technology Tutor</h3>
-              <div className="text-sm text-gray-600 mb-1"><b>Level:</b> University Preparation</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">ENSET Professor</div>
-              
-              <div className="flex justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                ))}
-                <span className="ml-1 text-sm text-gray-600">(4.9)</span>
-              </div>
-              
-              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
-                <span className="mr-2">🔒</span>
-                Reveal Identity
-                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
-              </button>
-            </div>
-
-            <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
-              <div className="relative mb-6">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-pink-400 flex items-center justify-center relative">
-                  <span className="text-2xl text-gray-400">?</span>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">!</span>
+             </Link>
+             <Link href="/tutors">
+              <div className="bg-white rounded-xl border border-gray-200 p-6 text-center hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+                <div className="relative mb-6">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-gray-100 border-4 border-pink-400 flex items-center justify-center relative">
+                    <span className="text-2xl text-gray-400">?</span>
+                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">!</span>
+                    </div>
                   </div>
                 </div>
+                
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Economics Tutor</h3>
+                <div className="text-sm text-gray-600 mb-1"><b>Level: </b>2BAC</div>
+                <div className="text-sm text-blue-600 font-medium mb-4">ENCG Master Commerce International</div>
+                
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                  ))}
+                  <span className="ml-1 text-sm text-gray-600">(5.0)</span>
+                </div>
+                
+                <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
+                  <span className="mr-2">🔒</span>
+                  Reveal Identity
+                  <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
+                </button>
               </div>
-              
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Economics Tutor</h3>
-              <div className="text-sm text-gray-600 mb-1"><b>Level: </b>2BAC</div>
-              <div className="text-sm text-blue-600 font-medium mb-4">ENCG Master Commerce International</div>
-              
-              <div className="flex justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                ))}
-                <span className="ml-1 text-sm text-gray-600">(5.0)</span>
-              </div>
-              
-              <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-lg text-gray-500 bg-gray-50 text-sm">
-                <span className="mr-2">🔒</span>
-                Reveal Identity
-                <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">Soon</span>
-              </button>
-            </div>
+             </Link>
           </div>
 
           <div className="text-center">
