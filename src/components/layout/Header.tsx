@@ -9,12 +9,14 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigation = [
-    { name: 'How it works', href: '#how-it-works' },
-    { name: 'Featured Tutors', href: '#tutors' },
-    { name: 'Success Stories', href: '#success-stories' },
-    { name: 'Subjects', href: '#subject1' },
-    { name: 'Stay in the loop', href: '#newsletter' },
+    { name: 'How it works', href: '#how-it-works', type: 'anchor' },
+    { name: 'Featured Tutors', href: '#tutors', type: 'anchor' },
+    { name: 'Success Stories', href: '#success-stories', type: 'anchor' },
+    { name: 'Subjects', href: '#subject1', type: 'anchor' },
+    { name: 'Pricing', href: '/pricing', type: 'route' },
+    { name: 'Stay in the loop', href: '#newsletter', type: 'anchor' },
   ];
+
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -35,9 +37,17 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:block ml-12">
-              <div className="flex items-baseline space-x-8">
-                {navigation.map((item) => (
+            <div className="hidden md:block ml-8">
+              {navigation.map((item) =>
+                item.type === 'route' ? (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  >
+                    {item.name}
+                  </Link>
+                ) : (
                   <a
                     key={item.name}
                     href={item.href}
@@ -45,13 +55,14 @@ const Header = () => {
                   >
                     {item.name}
                   </a>
-                ))}
-              </div>
+                )
+              )}
+
             </div>
           </div>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/auth/login"
               className="text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
@@ -84,8 +95,17 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 py-4">
-            <div className="space-y-2">
-              {navigation.map((item) => (
+            {navigation.map((item) =>
+              item.type === 'route' ? (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block text-gray-600 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ) : (
                 <a
                   key={item.name}
                   href={item.href}
@@ -94,8 +114,9 @@ const Header = () => {
                 >
                   {item.name}
                 </a>
-              ))}
-            </div>
+              )
+            )}
+
             <div className="border-t border-gray-200 pt-4 mt-4 space-y-2">
               <Link
                 href="/auth/login"
