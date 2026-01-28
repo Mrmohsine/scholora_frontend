@@ -488,8 +488,9 @@ export function throttle<T extends (...args: any[]) => void>(
     }
   };
 }): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms)),
 }
+
 
 // Local storage helpers
 export const storage = {
