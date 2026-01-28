@@ -54,15 +54,15 @@ export default function StudentSidebar() {
   return (
     <div className="flex flex-col w-64 bg-white border-r border-gray-200 max-h-screen sticky top-0">
       {/* Logo */}
-      <div className="flex items-center px-6 border-b border-gray-200">
+      <div className="flex items-center px-6 border-b border-gray-200 h-18">
         <Link href="/" className="flex items-center">
           <Image
             src="/images/logos/logo_blue.png"
             alt="Scholora Logo"
             width={200}
             height={320}
-            className="w-auto p-0"
-            style={{ margin: "-50px 0" }}
+            className="w-50 h-50 object-contain"
+            priority
           />
         </Link>
       </div>
