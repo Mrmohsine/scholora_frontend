@@ -1,22 +1,21 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigation = [
-    { name: 'How it works', href: '#how-it-works', type: 'anchor' },
-    { name: 'Featured Tutors', href: '#tutors', type: 'anchor' },
-    { name: 'Success Stories', href: '#success-stories', type: 'anchor' },
-    { name: 'Subjects', href: '#subject1', type: 'anchor' },
-    { name: 'Pricing', href: '/pricing', type: 'route' },
-    { name: 'Stay in the loop', href: '#newsletter', type: 'anchor' },
+    { name: "How it works", href: "/#how-it-works", type: "route" },
+    { name: "Featured Tutors", href: "/#tutors", type: "route" },
+    { name: "Success Stories", href: "/#success-stories", type: "route" },
+    { name: "Subjects", href: "/#subject1", type: "route" },
+    { name: "Pricing", href: "/pricing", type: "route" },
+    { name: "Stay in the loop", href: "/#newsletter", type: "route" },
   ];
-
 
   return (
     <header className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -39,7 +38,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <div className="hidden md:block ml-8">
               {navigation.map((item) =>
-                item.type === 'route' ? (
+                item.type === "route" ? (
                   <Link
                     key={item.name}
                     href={item.href}
@@ -55,9 +54,8 @@ const Header = () => {
                   >
                     {item.name}
                   </a>
-                )
+                ),
               )}
-
             </div>
           </div>
 
@@ -96,7 +94,7 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 py-4">
             {navigation.map((item) =>
-              item.type === 'route' ? (
+              item.type === "route" ? (
                 <Link
                   key={item.name}
                   href={item.href}
@@ -114,7 +112,7 @@ const Header = () => {
                 >
                   {item.name}
                 </a>
-              )
+              ),
             )}
 
             <div className="border-t border-gray-200 pt-4 mt-4 space-y-2">
