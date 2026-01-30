@@ -11,6 +11,7 @@ import AttendanceOverview from '@/components/tutor/Dashboard/AttendanceOverview'
 import Messages from '@/components/tutor/Dashboard/Messages';
 import LiveActivities from '@/components/tutor/Dashboard/LiveActivities';
 import { authService } from '@/lib/auth/authService';
+import PackStatusCard from '@/components/tutor/Dashboard/PackStatusCard';
 
 function TutorDashboardContent() {
   const [user, setUser] = useState<any>(null);
@@ -44,9 +45,10 @@ function TutorDashboardContent() {
         
         {/* Dashboard Content */}
         <main className="flex-1 p-6 space-y-6">
+          {/* Package */}.
+          <PackStatusCard />
           {/* Stats Cards - Top Row */}
           <TutorDashboardStats />
-          
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column - Today's Classes (spans 2 columns) */}

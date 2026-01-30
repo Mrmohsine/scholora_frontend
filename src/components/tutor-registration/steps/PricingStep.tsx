@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Info, ChevronUp, Check } from 'lucide-react';
 import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
 import Swal from 'sweetalert2';
+import UpgradePackPage from '@/components/tutor/packages/UpgradePackPage';
 
 interface PricingStepProps {
   formData: {
@@ -152,103 +153,8 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
         <p className="text-center text-gray-500 text-sm mt-2">Price in MAD only</p>
       </div>
 
-      {/* Preply Commission Section */}
-      <div className="bg-gray-50 rounded-xl p-6">
-        <button
-          onClick={() => setShowCommissionDetails(!showCommissionDetails)}
-          className="flex items-center justify-between w-full text-left mb-4"
-        >
-          <h4 className="text-lg font-semibold text-gray-900">Preply commission</h4>
-          <ChevronUp className={`w-5 h-5 text-gray-500 transition-transform ${showCommissionDetails ? '' : 'rotate-180'}`} />
-        </button>
-
-        {showCommissionDetails && (
-          <div className="space-y-4">
-            <p className="text-gray-600">
-              We use the funds for getting more students and for constant improvements of our learning platform
-            </p>
-
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700">
-                  For every trial lesson with a new student Preply's commission is 100%
-                </span>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700">
-                  For all the subsequent lessons, Preply charges a percentage (18%-33%) of the hourly rate
-                </span>
-              </div>
-
-              <div className="flex items-start space-x-3">
-                <Check className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700">
-                  The more hours you teach, the lower your rate of commission will be
-                </span>
-              </div>
-            </div>
-
-            {/* Commission Rate Table */}
-            <div className="bg-white rounded-lg overflow-hidden mt-6">
-              <div className="grid grid-cols-2 gap-0">
-                <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-900 border-b border-gray-200">
-                  Completed hours
-                </div>
-                <div className="bg-gray-100 px-4 py-3 font-semibold text-gray-900 border-b border-l border-gray-200">
-                  Commission rate
-                </div>
-                
-                {commissionRates.map((tier, index) => (
-                  <>
-                    <div key={`hours-${index}`} className={`px-4 py-3 text-gray-700 ${index < commissionRates.length - 1 ? 'border-b border-gray-200' : ''}`}>
-                      {tier.hours}
-                    </div>
-                    <div key={`rate-${index}`} className={`px-4 py-3 text-gray-900 font-semibold border-l border-gray-200 ${index < commissionRates.length - 1 ? 'border-b' : ''}`}>
-                      {tier.rate}
-                    </div>
-                  </>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Pricing Tips */}
-      <div className="bg-blue-50 rounded-xl p-6">
-        <h5 className="font-semibold text-blue-900 mb-3">Pricing Tips:</h5>
-        <ul className="space-y-2 text-sm text-blue-800">
-          <li>• Research competitor rates in your subject area</li>
-          <li>• Consider your experience level and qualifications</li>
-          <li>• You can adjust your price anytime after registration</li>
-          <li>• Higher prices often attract more serious students</li>
-          <li>• Start competitive and increase as you get positive reviews</li>
-        </ul>
-      </div>
-
-      {/* Price Calculation Preview */}
-      {formData.hourlyRate && (
-        <div className="bg-green-50 rounded-xl p-6">
-          <h5 className="font-semibold text-green-900 mb-3">Your Earnings Preview:</h5>
-          <div className="space-y-2 text-sm text-green-800">
-            <div className="flex justify-between">
-              <span>Lesson price (50 min):</span>
-              <span className="font-semibold">${formData.hourlyRate}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Commission (33% for first 20 hours):</span>
-              <span className="font-semibold">-${(parseFloat(formData.hourlyRate) * 0.33).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between border-t border-green-200 pt-2">
-              <span className="font-semibold">You earn per lesson:</span>
-              <span className="font-bold text-green-700">${(parseFloat(formData.hourlyRate) * 0.67).toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Commission Details */}
+      <UpgradePackPage title={false} current={false}/>
 
       {/* Buttons */}
       <div className="flex justify-between pt-6">
