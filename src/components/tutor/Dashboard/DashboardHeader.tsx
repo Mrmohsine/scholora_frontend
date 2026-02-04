@@ -147,7 +147,6 @@ export default function TutorDashboardHeader({ user }: DashboardHeaderProps) {
             </button>
           </div>
 
-          {/* User Profile */}
           {/* Profile + Dropdown */}
           <div className="relative">
             <button

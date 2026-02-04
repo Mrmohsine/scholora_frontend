@@ -5,6 +5,7 @@ import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import TutorSidebar from '@/components/tutor/Sidebar';
 import TutorDashboardHeader from '@/components/tutor/Dashboard/DashboardHeader';
 import { authService } from '@/lib/auth/authService';
+import Link from 'next/link';
 
 function TutorClassesContent() {
   const [user, setUser] = useState<any>(null);
@@ -158,9 +159,9 @@ function TutorClassesContent() {
                   }`}>
                     {cls.status}
                   </span>
-                  <button className="bg-gray-800 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-900">
+                  <Link href={`/tutor-portal/classes/${cls.id}/lessons`} className="bg-gray-800 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-gray-900">
                     Enter Class
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
