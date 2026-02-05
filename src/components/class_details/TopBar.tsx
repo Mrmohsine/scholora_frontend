@@ -153,13 +153,13 @@ export default function TopBar({ user }: TopBarProps) {
                 <div className="py-1">
                   <Link
                     href="/tutor-portal/profile"
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 text-black"
                   >
                     My profile
                   </Link>
                   <Link
                     href="/tutor-portal/settings"
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm hover:bg-gray-100 text-black"
                   >
                     Settings
                   </Link>
