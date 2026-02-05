@@ -1,6 +1,8 @@
 'use client';
 
 import { Download, Settings } from "lucide-react";
+import { useState } from "react";
+import StudentDetailsModal from "@/components/class_details/grades/StudentDetailsModal";
 
 export default function GradesPage() {
   const assignments = [
@@ -11,6 +13,7 @@ export default function GradesPage() {
     { name: "Final Exam", pts: 200 },
   ];
 
+  const [selectedStudent, setSelectedStudent] = useState<any>(null);
   const students = [
     {
       initials: "WE",
@@ -85,7 +88,12 @@ export default function GradesPage() {
                   <div className="w-9 h-9 rounded-full bg-green-100 text-blue-600 flex items-center justify-center text-sm font-medium">
                     {s.initials}
                   </div>
-                  <span className="font-medium">{s.name}</span>
+                  <button
+                    className="font-medium hover:underline"
+                    onClick={() => setSelectedStudent(s)}
+                  >
+                    {s.name}
+                  </button>
                 </div>
               </td>
 
@@ -98,6 +106,11 @@ export default function GradesPage() {
           ))}
         </tbody>
       </table>
+      <StudentDetailsModal
+        open={selectedStudent !== null}
+        student={selectedStudent}
+        onClose={() => setSelectedStudent(null)}
+      />
     </div>
   );
 }

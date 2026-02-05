@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCircle, MoreHorizontal,Heart } from "lucide-react";
+import { MoreHorizontal, Heart, MessageCircle } from "lucide-react";
 
 export default function AnnouncementCard() {
   return (
