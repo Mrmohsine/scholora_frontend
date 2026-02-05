@@ -1,6 +1,7 @@
+// src/app/pricing/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import {
@@ -16,13 +17,53 @@ import {
   TrendingUp,
 } from "lucide-react";
 
+interface PricingPack {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  currency: string;
+  billing_period: string;
+  virtual_classrooms: number;
+  sessions_per_week: number | null;
+  max_students: number;
+  basic_payment_collection: boolean;
+  automated_invoicing: boolean;
+  student_roster: boolean;
+  attendance_tracking: boolean;
+  full_tool_suite: boolean;
+  premium_features: boolean;
+  description: string;
+  is_active: boolean;
+  is_popular: boolean;
+  sort_order: number;
+}
+
 export default function Page() {
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [packs, setPacks] = useState<PricingPack[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const prices = {
-    basic: { monthly: 0, annual: 0 },
-    pro: { monthly: 399, annual: 319 },
+  useEffect(() => {
+    fetchPacks();
+  }, []);
+
+  const fetchPacks = async () => {
+    try {
+      const res = await fetch('/api/admin/pricing-packs');
+      const data = await res.json();
+      
+      if (Array.isArray(data)) {
+        // Filtrer seulement les packs actifs et trier par sort_order
+        const activePacks = data.filter(pack => pack.is_active).sort((a, b) => a.sort_order - b.sort_order);
+        setPacks(activePacks);
+      }
+    } catch (error) {
+      console.error('Error fetching packs:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const faqs = [
@@ -57,6 +98,18 @@ export default function Page() {
       answer: "Basic users receive email support. Professional users get priority support with faster response times.",
     },
   ];
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div className="flex h-screen items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#0168AF] border-t-transparent"></div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -113,129 +166,136 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Pricing Cards */}
+            {/* Pricing Cards - Dynamique */}
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {/* Basic Plan */}
-              <div className="group relative bg-white rounded-3xl border-2 border-gray-200 p-8 hover:border-[#0168AF]/30 hover:shadow-xl transition-all duration-300">
-                <div className="absolute -top-4 left-8">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-bold">
-                    <Star className="w-3 h-3" />
-                    STARTER
-                  </span>
+              {packs.map((pack) => (
+                <div
+                  key={pack.id}
+                  className={`group relative rounded-3xl p-8 transition-all duration-300 ${
+                    pack.is_popular
+                      ? "bg-gradient-to-br from-[#0168AF] to-[#0152a3] shadow-2xl hover:shadow-3xl transform hover:scale-[1.02]"
+                      : "bg-white border-2 border-gray-200 hover:border-[#0168AF]/30 hover:shadow-xl"
+                  }`}
+                >
+                  <div className="absolute -top-4 left-8">
+                    <span className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                      pack.is_popular
+                        ? "bg-amber-400 text-amber-900"
+                        : "bg-gray-100 text-gray-700"
+                    }`}>
+                      {pack.is_popular ? (
+                        <>
+                          <TrendingUp className="w-3 h-3" />
+                          MOST POPULAR
+                        </>
+                      ) : (
+                        <>
+                          <Star className="w-3 h-3" />
+                          STARTER
+                        </>
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="pt-4 mb-8">
+                    <h3 className={`text-2xl font-bold mb-3 ${pack.is_popular ? "text-white" : "text-gray-900"}`}>
+                      {pack.name}
+                    </h3>
+                    <p className={pack.is_popular ? "text-white/90" : "text-gray-600"}>
+                      {pack.description}
+                    </p>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className={`text-6xl font-bold ${pack.is_popular ? "text-white" : "text-gray-900"}`}>
+                        {billing === "annual" && pack.billing_period === "annual" 
+                          ? Math.round(pack.price * 0.8) 
+                          : pack.price}
+                      </span>
+                      <span className={`font-medium ${pack.is_popular ? "text-white/80" : "text-gray-500"}`}>
+                        {pack.currency}
+                      </span>
+                    </div>
+                    <span className={`font-medium ${pack.is_popular ? "text-white/80" : "text-gray-500"}`}>
+                      {pack.price === 0 
+                        ? "Forever Free"
+                        : `/${billing === "monthly" ? "month" : "month (billed annually)"}`}
+                    </span>
+                  </div>
+
+                  <button className={`w-full py-4 rounded-xl font-semibold transition-colors shadow-lg mb-8 ${
+                    pack.is_popular
+                      ? "bg-white text-[#0168AF] hover:bg-gray-50"
+                      : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                  }`}>
+                    {pack.price === 0 ? "Get Started Free" : "Start 14-Day Free Trial"}
+                  </button>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                      <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                        {pack.virtual_classrooms === 1 
+                          ? "1 virtual classroom" 
+                          : `${pack.virtual_classrooms} virtual classrooms`}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                      <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                        {pack.sessions_per_week 
+                          ? `${pack.sessions_per_week} sessions per week`
+                          : "Unlimited sessions per week"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-start gap-3">
+                      <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                      <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                        Up to {pack.max_students} students
+                      </span>
+                    </div>
+
+                    {pack.automated_invoicing && (
+                      <div className="flex items-start gap-3">
+                        <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                        <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                          Automated invoicing & payments
+                        </span>
+                      </div>
+                    )}
+
+                    {pack.full_tool_suite && (
+                      <div className="flex items-start gap-3">
+                        <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                        <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                          Full tool suite & premium features
+                        </span>
+                      </div>
+                    )}
+
+                    {pack.basic_payment_collection && !pack.automated_invoicing && (
+                      <div className="flex items-start gap-3">
+                        <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                        <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                          Basic payment collection
+                        </span>
+                      </div>
+                    )}
+
+                    {pack.student_roster && (
+                      <div className="flex items-start gap-3">
+                        <Check className={`w-5 h-5 mt-0.5 flex-shrink-0 ${pack.is_popular ? "text-white" : "text-[#0168AF]"}`} />
+                        <span className={pack.is_popular ? "text-white/95" : "text-gray-700"}>
+                          Student roster & attendance
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-
-                <div className="pt-4 mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Basic Plan</h3>
-                  <p className="text-gray-600">Perfect for individual tutors starting their journey.</p>
-                </div>
-
-                <div className="mb-8">
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-6xl font-bold text-gray-900">{prices.basic[billing]}</span>
-                    <span className="text-gray-500 font-medium">MAD</span>
-                  </div>
-                  <span className="text-gray-500 font-medium">Forever Free</span>
-                </div>
-
-                <button className="w-full py-4 rounded-xl bg-gray-100 text-gray-900 font-semibold hover:bg-gray-200 transition-colors mb-8">
-                  Get Started Free
-                </button>
-
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">1 class only</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">2 live sessions per week</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">Up to 10 students</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">Basic payment management</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">Student engagement tools</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#0168AF] mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">Email support (48h)</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Professional Plan */}
-              <div className="group relative bg-gradient-to-br from-[#0168AF] to-[#0152a3] rounded-3xl p-8 shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-[1.02]">
-                <div className="absolute -top-4 left-8">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-400 text-amber-900 text-xs font-bold shadow-lg">
-                    <TrendingUp className="w-3 h-3" />
-                    MOST POPULAR
-                  </span>
-                </div>
-
-                <div className="pt-4 mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-3">Professional</h3>
-                  <p className="text-white/90">Advanced features for established educators.</p>
-                </div>
-
-                <div className="mb-8">
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-6xl font-bold text-white">{prices.pro[billing]}</span>
-                    <span className="text-white/80 font-medium">MAD</span>
-                  </div>
-                  <span className="text-white/80 font-medium">
-                    /{billing === "monthly" ? "month" : "month (billed annually)"}
-                  </span>
-                </div>
-
-                <button className="w-full py-4 rounded-xl bg-white text-[#0168AF] font-semibold hover:bg-gray-50 transition-colors shadow-lg mb-8">
-                  Start 14-Day Free Trial
-                </button>
-
-                <div className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Unlimited classes</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Unlimited sessions per week</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Up to 50 students included</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Advanced analytics & reporting</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Automated invoicing & payments</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Calendar & scheduling tools</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Parent portal & communication</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Grade & homework management</span>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-white mt-0.5 flex-shrink-0" />
-                    <span className="text-white/95">Priority support (same-day)</span>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
