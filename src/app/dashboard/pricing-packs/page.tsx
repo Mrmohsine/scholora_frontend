@@ -49,8 +49,6 @@ export default function PricingPacksPage() {
       const res = await fetch('/api/admin/pricing-packs');
       const data = await res.json();
       
-      console.log('API Response:', data);
-      
       if (Array.isArray(data)) {
         setPacks(data);
       } else if (data.data && Array.isArray(data.data)) {
@@ -147,7 +145,7 @@ export default function PricingPacksPage() {
           {packs.map((pack) => (
             <div
               key={pack.id}
-              className={`group relative transform rounded-3xl bg-white p-8 shadow-xl transition-all hover:scale-105 hover:shadow-2xl ${
+              className={`group relative transform rounded-3xl bg-white p-6 shadow-xl transition-all hover:scale-105 hover:shadow-2xl ${
                 pack.is_popular ? 'ring-4 ring-[#0168AF]/20' : ''
               }`}
             >
@@ -308,7 +306,7 @@ function PackModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-      <div className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-3xl bg-white shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-2xl">
         <div className="bg-gradient-to-r from-[#0168AF] to-[#0152a3] px-8 py-6">
           <h2 className="text-3xl font-bold text-white">
             {pack ? 'Modifier le Pack' : 'Créer un Nouveau Pack'}
@@ -325,7 +323,7 @@ function PackModal({
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="Ex: Professional Pack"
                 required
               />
@@ -337,7 +335,7 @@ function PackModal({
                 type="text"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="professional"
                 required
               />
@@ -349,7 +347,7 @@ function PackModal({
                 type="number"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="319"
                 required
               />
@@ -379,7 +377,7 @@ function PackModal({
                 onChange={(e) =>
                   setFormData({ ...formData, virtual_classrooms: Number(e.target.value) })
                 }
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="3"
                 required
               />
@@ -398,7 +396,7 @@ function PackModal({
                     sessions_per_week: e.target.value ? Number(e.target.value) : null,
                   })
                 }
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="Illimité"
               />
             </div>
@@ -413,7 +411,7 @@ function PackModal({
                 onChange={(e) =>
                   setFormData({ ...formData, max_students: Number(e.target.value) })
                 }
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="50"
                 required
               />
@@ -427,7 +425,7 @@ function PackModal({
                 onChange={(e) =>
                   setFormData({ ...formData, sort_order: Number(e.target.value) })
                 }
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
                 placeholder="1"
               />
             </div>
@@ -441,7 +439,7 @@ function PackModal({
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
-              className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+              className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
               placeholder="Description du pack..."
             />
           </div>
