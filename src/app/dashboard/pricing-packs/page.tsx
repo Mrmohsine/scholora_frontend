@@ -39,6 +39,12 @@ export default function PricingPacksPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingPack, setEditingPack] = useState<PricingPack | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     fetchPacks();
@@ -70,8 +76,10 @@ export default function PricingPacksPage() {
     try {
       await fetch(`/api/admin/pricing-packs/${id}`, { method: 'DELETE' });
       setPacks(packs.filter((p) => p.id !== id));
+      showToast('Pack supprimé avec succès!', 'success');
     } catch (error) {
       console.error('Error deleting pack:', error);
+      showToast('Erreur lors de la suppression', 'error');
     }
   };
 
@@ -85,6 +93,7 @@ export default function PricingPacksPage() {
         });
         const updated = await res.json();
         setPacks(packs.map((p) => (p.id === updated.id ? updated : p)));
+        showToast('Pack modifié avec succès!', 'success');
       } else {
         const res = await fetch('/api/admin/pricing-packs', {
           method: 'POST',
@@ -93,11 +102,13 @@ export default function PricingPacksPage() {
         });
         const created = await res.json();
         setPacks([...packs, created]);
+        showToast('Pack créé avec succès!', 'success');
       }
       setShowModal(false);
       fetchPacks();
     } catch (error) {
       console.error('Error saving pack:', error);
+      showToast('Erreur lors de la sauvegarde', 'error');
     }
   };
 
@@ -111,6 +122,26 @@ export default function PricingPacksPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 p-8">
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed top-4 right-4 z-[60] animate-in slide-in-from-top">
+          <div className={`rounded-lg px-6 py-4 shadow-lg ${
+            toast.type === 'success' 
+              ? 'bg-green-500 text-white' 
+              : 'bg-red-500 text-white'
+          }`}>
+            <div className="flex items-center gap-3">
+              {toast.type === 'success' ? (
+                <CheckCircleIcon className="h-5 w-5" />
+              ) : (
+                <XCircleIcon className="h-5 w-5" />
+              )}
+              <span className="font-medium">{toast.message}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold text-gray-900">Pricing Packs</h1>
@@ -360,7 +391,7 @@ function PackModal({
               <select
                 value={formData.billing_period}
                 onChange={(e) => setFormData({ ...formData, billing_period: e.target.value })}
-                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 transition-colors focus:border-[#0168AF] focus:outline-none"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-gray-900 transition-colors focus:border-[#0168AF] focus:outline-none"
               >
                 <option value="monthly">Mensuel</option>
                 <option value="annual">Annuel</option>
@@ -445,7 +476,7 @@ function PackModal({
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30">
+            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.automated_invoicing}
@@ -457,7 +488,7 @@ function PackModal({
               <span className="text-sm font-medium text-gray-700">Facturation Auto</span>
             </label>
 
-            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30">
+            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.full_tool_suite}
@@ -469,7 +500,7 @@ function PackModal({
               <span className="text-sm font-medium text-gray-700">Suite Complète</span>
             </label>
 
-            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30">
+            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.is_active}
@@ -479,7 +510,7 @@ function PackModal({
               <span className="text-sm font-medium text-gray-700">Actif</span>
             </label>
 
-            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30">
+            <label className="flex items-center gap-3 rounded-xl border-2 border-gray-200 p-4 transition-colors hover:border-[#0168AF]/30 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.is_popular}
