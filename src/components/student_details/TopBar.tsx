@@ -173,7 +173,7 @@ export default function TopBar({ user }: TopBarProps) {
                 <div className="border-t">
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 overflow-hidden hover:rounded-b-lg"
                   >
                     Logout
                   </button>
