@@ -34,6 +34,7 @@ const navigation: NavigationItem[] = [
   { name: 'Students', href: '/dashboard/students', icon: UsersIcon },
   { name: 'Tutors', href: '/dashboard/tutors', icon: AcademicCapIcon },
   { name: 'Verification', href: '/dashboard/verification', icon: CheckCircleIcon },
+  { name: 'Pricing Packs', href: '/dashboard/pricing-packs', icon: CurrencyDollarIcon },
   { name: 'Subject Performance', href: '/dashboard/subject-performance', icon: ChartBarIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: PresentationChartLineIcon },
   { name: 'Revenue', href: '/dashboard/revenue', icon: CurrencyDollarIcon },
