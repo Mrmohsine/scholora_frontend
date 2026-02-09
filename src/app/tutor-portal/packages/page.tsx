@@ -21,7 +21,9 @@ const Index = () => {
       }
       setLoading(false);
     }, []);
-  
+    console.log("User data in tutor portal:", user);
+    const currentPackSlug =
+    user?.tutor?.pricing_pack?.slug;
     if (loading) {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -45,7 +47,10 @@ const Index = () => {
             <main className="flex-1 p-6 space-y-6">
               {/* Package */}.
               <PackOverviewCard />
-              <UpgradePackPage title={true} current={true} />
+              <UpgradePackPage
+                title={true}
+                currentPackSlug={currentPackSlug}
+              />
               <WhyUpgradeSection />
               <RecentBillingTable />
             </main>

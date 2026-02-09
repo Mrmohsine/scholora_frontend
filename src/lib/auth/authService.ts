@@ -37,22 +37,28 @@ class AuthService {
    }
  }
 
- async login(credentials: LoginRequest): Promise<LoginResponse> {
-   const response = await this.makeRequest<LoginResponse>(
-     API_ENDPOINTS.LOGIN,
-     {
-       method: 'POST',
-       body: JSON.stringify(credentials),
-     }
-   );
+async login(credentials: LoginRequest): Promise<LoginResponse> {
+  const response = await this.makeRequest<LoginResponse>(
+    API_ENDPOINTS.LOGIN,
+    {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    }
+  );
 
-   if (response.success) {
-     this.setToken(response.data.access_token);
-     this.setUser(response.data.user);
-   }
+  if (response.success) {
+    // save token first (before fetching profile) to ensure authenticated request for profile data
+    this.setToken(response.data.access_token);
 
-   return response;
- }
+    // fetch full backend profile (includes tutor + pricing) to enrich frontend user data
+    const fullUser = await this.getCurrentUser();
+
+    // store enriched user data in localStorage for app-wide access
+    this.setUser(fullUser);
+  }
+
+  return response;
+}
 
  async logout(): Promise<void> {
    try {

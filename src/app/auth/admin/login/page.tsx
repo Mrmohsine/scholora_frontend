@@ -55,6 +55,30 @@ class AuthService {
     return await response.json();
   }
 
+  async getCurrentUser(): Promise<User> {
+    const token = this.getToken();
+
+    if (!token) {
+      throw new Error('No token available');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch current user');
+    }
+
+    const result = await response.json();
+
+    // backend returns { success, data }
+    return result.data;
+  }
+
   setToken(token: string): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('scholora_access_token', token);
@@ -115,8 +139,12 @@ const useAuth = () => {
       }
 
       authService.setToken(response.data.access_token);
-      authService.setUser(response.data.user);
-      setUser(response.data.user);
+
+      // fetch full user profile from /auth/me
+      const fullUser = await authService.getCurrentUser();
+
+      authService.setUser(fullUser);
+      setUser(fullUser);
       
       // Redirect to dashboard
       if (typeof window !== 'undefined') {

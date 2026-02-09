@@ -127,6 +127,8 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
     }
   };
 
+  const currentPackSlug = null;
+
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
@@ -154,7 +156,7 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
       </div>
 
       {/* Commission Details */}
-      <UpgradePackPage title={false} current={false}/>
+      <UpgradePackPage title={false} currentPackSlug={currentPackSlug}/>
 
       {/* Buttons */}
       <div className="flex justify-between pt-6">
