@@ -1,5 +1,6 @@
 import { Check, Star } from "lucide-react";
 import { useEffect, useState } from "react";
+import RenewPopup from "../Dashboard/RenewPopup";
 
 interface PricingPack {
   id: number;
@@ -18,12 +19,17 @@ interface PricingPack {
 export default function UpgradePackPage({
   title,
   currentPackSlug,
+  email,
 }: {
   title: boolean;
   currentPackSlug?: string;
+  email?: string;
 }) {
   const [packs, setPacks] = useState<PricingPack[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showRenew, setShowRenew] = useState(false);
+
+  const isProfessionalUser = currentPackSlug === "professional";
 
   useEffect(() => {
     fetchPacks();
@@ -35,14 +41,18 @@ export default function UpgradePackPage({
       const data = await res.json();
 
       if (Array.isArray(data)) {
-        setPacks(
-          data
-            .filter((p) => p.is_active)
-            .sort((a, b) => a.sort_order - b.sort_order)
-        );
+        let filtered = data
+          .filter((p) => p.is_active)
+          .sort((a, b) => a.sort_order - b.sort_order);
+
+        if (isProfessionalUser) {
+          filtered = filtered.filter((p) => p.slug === "professional");
+        }
+
+        setPacks(filtered);
       }
     } catch (err) {
-      console.error("Pack fetch error:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -62,20 +72,45 @@ export default function UpgradePackPage({
         </p>
       </div>
 
-      {/* Dynamic cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Layout */}
+      <div
+        className={
+          packs.length === 1
+            ? "flex justify-center"
+            : "grid grid-cols-1 md:grid-cols-2 gap-8"
+        }
+      >
         {packs.map((pack) => {
-          const isCurrent = pack.slug === currentPackSlug;
+          const isCurrent =
+            (!isProfessionalUser && pack.slug === "free") ||
+            (isProfessionalUser && pack.slug === "professional");
+
+          let buttonLabel = "";
+          let onClick = () => {};
+          let disabled = false;
+
+          if (pack.slug === "free") {
+            buttonLabel = "Included";
+            disabled = true;
+          }
+
+          if (pack.slug === "professional") {
+            if (isProfessionalUser) {
+              buttonLabel = "Renew";
+              onClick = () => setShowRenew(true);
+            } else {
+              buttonLabel = "Upgrade to Professional";
+              onClick = () => setShowRenew(true);
+            }
+          }
 
           return (
             <div
               key={pack.id}
               className={`relative rounded-2xl p-8 shadow-sm transition hover:shadow-lg hover:scale-[1.02]
-                ${
-                  pack.is_popular
-                    ? "border-2 border-blue-500 bg-white"
-                    : "border bg-white"
-                } text-black`}
+                ${packs.length === 1 ? "w-full max-w-md" : ""}
+                ${isCurrent ? "border-2 border-blue-600" : "border"}
+                bg-white text-black`}
             >
               {/* Badges */}
               <div className="absolute -top-3 right-4 flex gap-2">
@@ -86,27 +121,24 @@ export default function UpgradePackPage({
                   </span>
                 )}
 
-                {isCurrent && (
-                  <span className="px-3 py-1 text-xs bg-green-500 text-white rounded-full">
+                {!isProfessionalUser && pack.slug === "free" && (
+                  <span className="px-3 py-1 text-xs bg-yellow-400 text-yellow-900 rounded-full font-medium">
                     Current Plan
                   </span>
                 )}
               </div>
 
               <h2 className="text-xl font-semibold mb-2">{pack.name}</h2>
+
               <p className="text-gray-500 mb-4">{pack.description}</p>
 
-              {/* Price */}
               <div className="mb-6">
                 <span className="text-4xl font-bold">
                   {pack.currency} {pack.price}
                 </span>
-                <span className="text-gray-500">
-                  /{pack.billing_period}
-                </span>
+                <span className="text-gray-500">/{pack.billing_period}</span>
               </div>
 
-              {/* Features */}
               <ul className="space-y-3 mb-8">
                 {pack.features.map((feature) => (
                   <li key={feature} className="flex gap-2 text-gray-700">
@@ -116,27 +148,29 @@ export default function UpgradePackPage({
                 ))}
               </ul>
 
-              {/* CTA logic */}
-              {isCurrent ? (
-                <button
-                  disabled
-                  className="w-full py-2 rounded-lg bg-gray-400 text-white"
-                >
-                  Current Plan
-                </button>
-              ) : pack.slug === "professional" ? (
-                <button className="w-full py-2 rounded-lg border hover:bg-blue-50 hover:border-blue-600 hover:text-blue-600">
-                  Contact Sales
-                </button>
-              ) : (
-                <button className="w-full py-2 rounded-lg border hover:bg-blue-50 hover:border-blue-600 hover:text-blue-600">
-                  Upgrade Plan
-                </button>
-              )}
+              {/* CTA */}
+              <button
+                disabled={disabled}
+                onClick={onClick}
+                className={`w-full py-2 rounded-lg transition
+                  ${
+                    disabled
+                      ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                      : "border hover:bg-blue-50 hover:border-blue-600 hover:text-blue-600"
+                  }`}
+              >
+                {buttonLabel}
+              </button>
             </div>
           );
         })}
       </div>
+      <RenewPopup
+        open={showRenew}
+        onClose={() => setShowRenew(false)}
+        userEmail={email}
+        message={`Hello support team,\n\nI would like to renew my subscription pack. Please let me know the next steps.\n\nThank you!`}
+      />
     </div>
   );
 }
