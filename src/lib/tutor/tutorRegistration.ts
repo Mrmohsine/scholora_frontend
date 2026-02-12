@@ -38,7 +38,7 @@ export const tutorRegistrationApi = {
         });
       }
 
-      const response = await axios.post(`${API_URL}/api/tutor-registration/certification`, formData, {
+      const response = await axios.post(`${API_URL}/tutor-registration/certification`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -65,7 +65,7 @@ export const tutorRegistrationApi = {
         });
       }
 
-      const response = await axios.post(`${API_URL}/api/tutor-registration/education`, formData, {
+      const response = await axios.post(`${API_URL}/tutor-registration/education`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -74,7 +74,7 @@ export const tutorRegistrationApi = {
     },
 
   saveDescriptionStep: async (tutorId: number, description: string) => {
-      const response = await axios.post(`${API_URL}/api/tutor-registration/description`, {
+      const response = await axios.post(`${API_URL}/tutor-registration/description`, {
         tutorId,
         description
       });
@@ -95,7 +95,7 @@ export const tutorRegistrationApi = {
         formData.append('thumbnail', data.thumbnail);
       }
 
-      const response = await axios.post(`${API_URL}/api/tutor-registration/video`, formData, {
+      const response = await axios.post(`${API_URL}/tutor-registration/video`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -115,7 +115,7 @@ saveAvailabilityStep: async (tutorId: number, data: any) => {
         slots: data.availability[day].filter((slot: any) => slot.from && slot.to) // Filtrer les slots vides
       }));
 
-    const response = await axios.post(`${API_URL}/api/tutor-registration/availability`, {
+    const response = await axios.post(`${API_URL}/tutor-registration/availability`, {
       tutorId,
       timezone: data.timezone,
       availability: availabilityArray
@@ -123,7 +123,7 @@ saveAvailabilityStep: async (tutorId: number, data: any) => {
     return response.data;
   },
   savePricingStep: async (tutorId: number, hourlyRate: string) => {
-      const response = await axios.post(`${API_URL}/api/tutor-registration/pricing`, {
+      const response = await axios.post(`${API_URL}/tutor-registration/pricing`, {
         tutorId,
         hourlyRate
       });
@@ -131,13 +131,13 @@ saveAvailabilityStep: async (tutorId: number, data: any) => {
     },
 
     submitProfile: async (tutorId: number) => {
-      const response = await axios.post(`${API_URL}/api/tutor-registration/submit`, {
+      const response = await axios.post(`${API_URL}/tutor-registration/submit`, {
         tutorId
       });
       return response.data;
     },
   getDraft: async (email: string) => {
-    const response = await axios.get(`${API_URL}/api/tutor-registration/draft/${email}`);
+    const response = await axios.get(`${API_URL}/tutor-registration/draft/${email}`);
     return response.data;
   }
 };

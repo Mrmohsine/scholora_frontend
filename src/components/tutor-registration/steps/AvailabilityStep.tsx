@@ -93,11 +93,14 @@ const AvailabilityStep = ({ formData, onUpdate, onNext }: AvailabilityStepProps)
 
   const toggleDay = (day: string, enabled: boolean) => {
     const newAvailability = { ...availability };
+
     if (enabled) {
-      newAvailability[day] = [{ from: '', to: '' }];
+      // create a valid default slot so validation passes
+      newAvailability[day] = [{ from: '09:00', to: '17:00' }];
     } else {
       newAvailability[day] = [];
     }
+
     onUpdate({ availability: newAvailability });
   };
 
@@ -151,8 +154,13 @@ const AvailabilityStep = ({ formData, onUpdate, onNext }: AvailabilityStepProps)
     }
 
     // Vérifier si au moins un slot valide existe
-    const hasValidSlots = Object.values(availability).some((slots: any) => 
-      slots && slots.length > 0 && slots.some((slot: any) => slot.from && slot.to)
+    const hasValidSlots = Object.values(availability).some((slots: any[]) =>
+      Array.isArray(slots) &&
+      slots.some(
+        (slot) =>
+          slot?.from?.trim() !== '' &&
+          slot?.to?.trim() !== ''
+      )
     );
 
     if (!hasValidSlots) {

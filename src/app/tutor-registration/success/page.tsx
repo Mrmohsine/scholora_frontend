@@ -75,13 +75,6 @@ export default function RegistrationSuccessPage() {
             <Home className="w-5 h-5" />
             <span>Go to Homepage</span>
           </Link>
-          <Link
-            href="/tutor-portal/dashboard"
-            className="flex items-center justify-center space-x-2 px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
-          >
-            <User className="w-5 h-5" />
-            <span>View My Profile</span>
-          </Link>
         </div>
 
         {/* Contact Support */}
