@@ -30,24 +30,24 @@ interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
-  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'Students', href: '/dashboard/students', icon: UsersIcon },
-  { name: 'Tutors', href: '/dashboard/tutors', icon: AcademicCapIcon },
-  { name: 'Verification', href: '/dashboard/verification', icon: CheckCircleIcon },
-  { name: 'Pricing Packs', href: '/dashboard/pricing-packs', icon: CurrencyDollarIcon },
-  { name: 'Subject Performance', href: '/dashboard/subject-performance', icon: ChartBarIcon },
-  { name: 'Analytics', href: '/dashboard/analytics', icon: PresentationChartLineIcon },
-  { name: 'Revenue', href: '/dashboard/revenue', icon: CurrencyDollarIcon },
-  { name: 'Newsletter', href: '/dashboard/newsletter', icon: EnvelopeIcon  },
-  { name: 'Support', href: '/dashboard/support', icon: ChatBubbleLeftEllipsisIcon },
-  { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
+  { name: 'Dashboard', href: '/admin', icon: HomeIcon },
+  { name: 'Students', href: '/admin/students', icon: UsersIcon },
+  { name: 'Tutors', href: '/admin/tutors', icon: AcademicCapIcon },
+  { name: 'Verification', href: '/admin/verification', icon: CheckCircleIcon },
+  { name: 'Pricing Packs', href: '/admin/pricing-packs', icon: CurrencyDollarIcon },
+  { name: 'Subject Performance', href: '/admin/subject-performance', icon: ChartBarIcon },
+  { name: 'Analytics', href: '/admin/analytics', icon: PresentationChartLineIcon },
+  { name: 'Revenue', href: '/admin/revenue', icon: CurrencyDollarIcon },
+  { name: 'Newsletter', href: '/admin/newsletter', icon: EnvelopeIcon  },
+  { name: 'Support', href: '/admin/support', icon: ChatBubbleLeftEllipsisIcon },
+  { name: 'Settings', href: '/admin/settings', icon: CogIcon },
 ];
 
 export default function Sidebar({ onClose, isCollapsed = false }: SidebarProps) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/dashboard') return pathname === '/dashboard';
+    if (href === '/admin') return pathname === '/admin';
     return pathname.startsWith(href);
   };
 

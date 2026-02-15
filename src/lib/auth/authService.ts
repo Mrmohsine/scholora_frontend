@@ -152,7 +152,7 @@ async login(credentials: LoginRequest): Promise<LoginResponse> {
    
    switch (role) {
      case 'super_admin':
-       return '/admin/dashboard';
+       return '/admin';
      case 'tutor':
        return '/tutor-portal/dashboard';
      case 'student':
