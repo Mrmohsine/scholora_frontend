@@ -40,7 +40,7 @@ export default function About() {
 
           <div className="grid md:grid-cols-3 gap-10 text-center">
             <div>
-              <h3 className="text-xl font-semibold mb-3">Expert Educators</h3>
+              <h3 className="text-xl font-semibold mb-3 text-black">Expert Educators</h3>
               <p className="text-gray-600">
                 Learn from experienced educators who bring real-world expertise
                 and passion to every lesson.
@@ -48,7 +48,7 @@ export default function About() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold mb-3">
+              <h3 className="text-xl font-semibold mb-3 text-black">
                 Personalized Learning
               </h3>
               <p className="text-gray-600">
@@ -58,7 +58,7 @@ export default function About() {
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold mb-3">
+              <h3 className="text-xl font-semibold mb-3 text-black">
                 Flexible & Accessible
               </h3>
               <p className="text-gray-600">
