@@ -14,6 +14,7 @@ import {
   Flag
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 const TermsOfServicePage: React.FC = () => {
   const sections = [
@@ -251,7 +252,9 @@ const TermsOfServicePage: React.FC = () => {
         </div>
 
         {/* Footer Navigation */}
+        
       </div>
+      <Footer/>
     </div>
   );
 };

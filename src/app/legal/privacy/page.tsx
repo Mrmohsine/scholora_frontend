@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { Shield, Lock, Users, CreditCard, Eye, Mail, FileText, AlertCircle } from 'lucide-react';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 
 const PrivacyPolicyPage: React.FC = () => {
@@ -183,6 +185,7 @@ const PrivacyPolicyPage: React.FC = () => {
         {/* Footer Navigation */}
        
       </div>
+      <Footer/>
     </div>
   );
 };

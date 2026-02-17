@@ -11,6 +11,8 @@ import {
   CheckCircle,
   Info
 } from 'lucide-react';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
 
 const CookiePolicyPage: React.FC = () => {
   const cookieTypes = [
@@ -71,6 +73,7 @@ const CookiePolicyPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
+      <Header></Header>
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center space-x-4">
@@ -321,7 +324,9 @@ const CookiePolicyPage: React.FC = () => {
         </div>
 
         {/* Footer Navigation */}
+        
       </div>
+      <Footer/>
     </div>
   );
 };
