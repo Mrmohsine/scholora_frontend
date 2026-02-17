@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { tutorRegistrationApi } from '@/lib/tutor/tutorRegistration';
-import Swal from 'sweetalert2';
+import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
+import { tutorRegistrationApi } from "@/lib/tutor/tutorRegistration";
+import Swal from "sweetalert2";
 
 interface EducationStepProps {
   formData: {
@@ -26,32 +26,36 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
   const [loading, setLoading] = useState(false);
 
   const degreeTypes = [
-    'Choose degree type...',
-    'Associate Degree',
-    'Bachelor\'s Degree',
-    'Master\'s Degree',
-    'Doctoral Degree (PhD)',
-    'Professional Degree',
-    'Certificate Program',
-    'Diploma',
-    'Other'
+    "Choose degree type...",
+    "Associate Degree",
+    "Bachelor's Degree",
+    "Master's Degree",
+    "Doctoral Degree (PhD)",
+    "Professional Degree",
+    "Certificate Program",
+    "Diploma",
+    "Other",
   ];
 
-  const years = Array.from({ length: 50 }, (_, i) => (new Date().getFullYear() - i).toString());
+  const years = Array.from({ length: 50 }, (_, i) =>
+    (new Date().getFullYear() - i).toString(),
+  );
 
   // Initialize with one education entry if none exist - DANS useEffect
   useEffect(() => {
     if (!formData.education?.length && !formData.hasNoEducation) {
       onUpdate({
-        education: [{
-          university: '',
-          degree: '',
-          degreeType: '',
-          specialization: '',
-          yearsFrom: '',
-          yearsTo: '',
-          diplomaFile: null
-        }]
+        education: [
+          {
+            university: "",
+            degree: "",
+            degreeType: "",
+            specialization: "",
+            yearsFrom: "",
+            yearsTo: "",
+            diplomaFile: null,
+          },
+        ],
       });
     }
   }, []); // Run once on mount
@@ -62,15 +66,15 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
       education: [
         ...currentEducation,
         {
-          university: '',
-          degree: '',
-          degreeType: '',
-          specialization: '',
-          yearsFrom: '',
-          yearsTo: '',
-          diplomaFile: null
-        }
-      ]
+          university: "",
+          degree: "",
+          degreeType: "",
+          specialization: "",
+          yearsFrom: "",
+          yearsTo: "",
+          diplomaFile: null,
+        },
+      ],
     });
   };
 
@@ -79,7 +83,7 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
     const newEducation = [...currentEducation];
     newEducation[index] = {
       ...newEducation[index],
-      [field]: value
+      [field]: value,
     };
     onUpdate({ education: newEducation });
   };
@@ -89,46 +93,102 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
     const newEducation = [...currentEducation];
     newEducation[index] = {
       ...newEducation[index],
-      diplomaFile: file
+      diplomaFile: file,
     };
     onUpdate({ education: newEducation });
   };
 
   const handleNoEducationChange = (checked: boolean) => {
-    onUpdate({ 
+    onUpdate({
       hasNoEducation: checked,
-      education: checked ? [] : (formData.education || [])
+      education: checked ? [] : formData.education || [],
     });
+  };
+  const validateEducation = () => {
+    if (formData.hasNoEducation) return true;
+
+    const education = formData.education || [];
+    const currentYear = new Date().getFullYear();
+
+    if (!education.length) return "Please add at least one education entry";
+
+    for (let i = 0; i < education.length; i++) {
+      const edu = education[i];
+
+      if (!edu.university?.trim())
+        return `University is required (Education #${i + 1})`;
+
+      if (!edu.degree?.trim())
+        return `Degree is required (Education #${i + 1})`;
+
+      if (!edu.degreeType || edu.degreeType === "Choose degree type...")
+        return `Degree type is required (Education #${i + 1})`;
+
+      if (!edu.yearsFrom) return `Start year is required (Education #${i + 1})`;
+
+      if (!edu.yearsTo) return `End year is required (Education #${i + 1})`;
+
+      const fromYear = parseInt(edu.yearsFrom);
+      const toYear = parseInt(edu.yearsTo);
+
+      if (fromYear > currentYear)
+        return `Start year cannot be in the future (Education #${i + 1})`;
+
+      if (toYear > currentYear)
+        return `End year cannot be in the future (Education #${i + 1})`;
+
+      if (toYear < fromYear)
+        return `End year must be greater than or equal to start year (Education #${i + 1})`;
+
+      // Optional: limit max duration (ex: 15 years)
+      if (toYear - fromYear > 15)
+        return `Years range looks invalid (Education #${i + 1})`;
+    }
+
+    return true;
   };
 
   const handleSaveDraft = async () => {
-    const tutorId = localStorage.getItem('tutor_id');
+    const validation = validateEducation();
+
+    if (validation !== true) {
+      await Swal.fire({
+        icon: "error",
+        title: "Validation Error",
+        text: validation,
+      });
+      return;
+    }
+    const tutorId = localStorage.getItem("tutor_id");
     if (!tutorId) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please complete step 1 first.'
+        icon: "error",
+        title: "Error",
+        text: "Please complete step 1 first.",
       });
       return;
     }
 
     setLoading(true);
     try {
-      const response = await tutorRegistrationApi.saveEducationStep(parseInt(tutorId), formData);
-      
+      const response = await tutorRegistrationApi.saveEducationStep(
+        parseInt(tutorId),
+        formData,
+      );
+
       if (response.success) {
         await Swal.fire({
-          icon: 'success',
-          title: 'Draft Saved!',
-          text: 'Your education has been saved',
-          confirmButtonColor: '#2563eb'
+          icon: "success",
+          title: "Draft Saved!",
+          text: "Your education has been saved",
+          confirmButtonColor: "#2563eb",
         });
       }
     } catch (error: any) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.response?.data?.message || 'Failed to save education'
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.message || "Failed to save education",
       });
     } finally {
       setLoading(false);
@@ -136,38 +196,51 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
   };
 
   const handleContinue = async () => {
-    const tutorId = localStorage.getItem('tutor_id');
+    const validation = validateEducation();
+
+    if (validation !== true) {
+      await Swal.fire({
+        icon: "error",
+        title: "Validation Error",
+        text: validation,
+      });
+      return;
+    }
+    const tutorId = localStorage.getItem("tutor_id");
     if (!tutorId) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please complete step 1 first.'
+        icon: "error",
+        title: "Error",
+        text: "Please complete step 1 first.",
       });
       return;
     }
 
     setLoading(true);
     try {
-      const response = await tutorRegistrationApi.saveEducationStep(parseInt(tutorId), formData);
-      
+      const response = await tutorRegistrationApi.saveEducationStep(
+        parseInt(tutorId),
+        formData,
+      );
+
       if (response.success) {
         await Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Education saved successfully',
-          confirmButtonText: 'Continue',
-          confirmButtonColor: '#2563eb',
-          allowOutsideClick: false
+          icon: "success",
+          title: "Success!",
+          text: "Education saved successfully",
+          confirmButtonText: "Continue",
+          confirmButtonColor: "#2563eb",
+          allowOutsideClick: false,
         });
 
         onNext();
       }
     } catch (error: any) {
       await Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error.response?.data?.message || 'Failed to save education',
-        confirmButtonColor: '#ef4444'
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.message || "Failed to save education",
+        confirmButtonColor: "#ef4444",
       });
     } finally {
       setLoading(false);
@@ -179,7 +252,8 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
       <div className="text-center mb-8">
         <h3 className="text-3xl font-bold text-gray-900 mb-4">Education</h3>
         <p className="text-gray-600 text-lg">
-          Tell students more about the higher education that you've completed or are working on
+          Tell students more about the higher education that you've completed or
+          are working on
         </p>
       </div>
 
@@ -193,7 +267,10 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
           className="w-5 h-5 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
           disabled={loading}
         />
-        <label htmlFor="noEducation" className="text-sm font-medium text-gray-900">
+        <label
+          htmlFor="noEducation"
+          className="text-sm font-medium text-gray-900"
+        >
           I don't have a higher education degree
         </label>
       </div>
@@ -211,7 +288,9 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                 <input
                   type="text"
                   value={edu.university}
-                  onChange={(e) => updateEducation(index, 'university', e.target.value)}
+                  onChange={(e) =>
+                    updateEducation(index, "university", e.target.value)
+                  }
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-gray-900 placeholder-gray-400"
                   placeholder="E.g. Mount Royal University"
                   disabled={loading}
@@ -226,7 +305,9 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                 <input
                   type="text"
                   value={edu.degree}
-                  onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                  onChange={(e) =>
+                    updateEducation(index, "degree", e.target.value)
+                  }
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-gray-900 placeholder-gray-400"
                   placeholder="E.g. Bachelor's degree in the English Language"
                   disabled={loading}
@@ -241,12 +322,16 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                 <div className="relative">
                   <select
                     value={edu.degreeType}
-                    onChange={(e) => updateEducation(index, 'degreeType', e.target.value)}
+                    onChange={(e) =>
+                      updateEducation(index, "degreeType", e.target.value)
+                    }
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
                     disabled={loading}
                   >
                     {degreeTypes.map((type) => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
                     ))}
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -261,7 +346,9 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                 <input
                   type="text"
                   value={edu.specialization}
-                  onChange={(e) => updateEducation(index, 'specialization', e.target.value)}
+                  onChange={(e) =>
+                    updateEducation(index, "specialization", e.target.value)
+                  }
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none transition-all text-gray-900 placeholder-gray-400"
                   placeholder="E.g. Teaching English as a Foreign Language"
                   disabled={loading}
@@ -277,13 +364,17 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                   <div className="relative">
                     <select
                       value={edu.yearsFrom}
-                      onChange={(e) => updateEducation(index, 'yearsFrom', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "yearsFrom", e.target.value)
+                      }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
                       disabled={loading}
                     >
                       <option value="">Select</option>
                       {years.map((year) => (
-                        <option key={year} value={year}>{year}</option>
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -291,13 +382,17 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                   <div className="relative">
                     <select
                       value={edu.yearsTo}
-                      onChange={(e) => updateEducation(index, 'yearsTo', e.target.value)}
+                      onChange={(e) =>
+                        updateEducation(index, "yearsTo", e.target.value)
+                      }
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 outline-none appearance-none bg-white text-gray-900"
                       disabled={loading}
                     >
                       <option value="">Select</option>
                       {years.map((year) => (
-                        <option key={year} value={year}>{year}</option>
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
                       ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
@@ -307,11 +402,15 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
 
               {/* Diploma Upload Section */}
               <div className="bg-gray-50 rounded-xl p-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Get a "Diploma verified" badge</h4>
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  Get a "Diploma verified" badge
+                </h4>
                 <p className="text-sm text-gray-600 mb-4">
-                  Upload your diploma to boost your credibility! Our team will review it and add the badge to your profile. Once reviewed, your files will be deleted.
+                  Upload your diploma to boost your credibility! Our team will
+                  review it and add the badge to your profile. Once reviewed,
+                  your files will be deleted.
                 </p>
-                
+
                 <p className="text-xs text-gray-500 mb-4">
                   JPG or PNG format, maximum size of 20MB.
                 </p>
@@ -331,7 +430,7 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
                   htmlFor={`diploma-upload-${index}`}
                   className="inline-block bg-white border-2 border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-50 cursor-pointer transition-colors"
                 >
-                  {edu.diplomaFile ? edu.diplomaFile.name : 'Upload'}
+                  {edu.diplomaFile ? edu.diplomaFile.name : "Upload"}
                 </label>
               </div>
             </div>
@@ -356,7 +455,7 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
           disabled={loading}
           className="px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold hover:bg-gray-50 disabled:opacity-50 transition-colors"
         >
-          {loading ? 'Saving...' : 'Save Draft'}
+          {loading ? "Saving..." : "Save Draft"}
         </button>
         <button
           type="button"
@@ -364,7 +463,7 @@ const EducationStep = ({ formData, onUpdate, onNext }: EducationStepProps) => {
           disabled={loading}
           className="px-8 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
-          {loading ? 'Saving...' : 'Continue →'}
+          {loading ? "Saving..." : "Continue →"}
         </button>
       </div>
     </div>

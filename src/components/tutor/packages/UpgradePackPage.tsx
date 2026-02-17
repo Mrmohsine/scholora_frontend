@@ -20,10 +20,12 @@ export default function UpgradePackPage({
   title,
   currentPackSlug,
   email,
+  register = false
 }: {
   title: boolean;
   currentPackSlug?: string;
   email?: string;
+  register?: boolean;
 }) {
   const [packs, setPacks] = useState<PricingPack[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,13 +61,13 @@ export default function UpgradePackPage({
   };
 
   if (loading) return <div className="p-10 text-center">Loading plans...</div>;
-
+  console.log(packs);
   return (
     <div className="max-w-5xl mx-auto py-12 px-6">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-3xl font-bold text-gray-900">
-          {title ? "Upgrade Your Pack" : "Choose Your Plan"}
+          {title ? "Upgrade Your Pack" : "Look Our Plans and Features"}
         </h1>
         <p className="text-gray-500 mt-2">
           Choose the perfect plan to grow your tutoring business
@@ -133,10 +135,20 @@ export default function UpgradePackPage({
               <p className="text-gray-500 mb-4">{pack.description}</p>
 
               <div className="mb-6">
-                <span className="text-4xl font-bold">
-                  {pack.currency} {pack.price}
-                </span>
-                <span className="text-gray-500">/{pack.billing_period}</span>
+                {pack.slug === "free" ? (
+                  <span className="text-2xl font-bold text-green-600">
+                    Free trial for 30 days
+                  </span>
+                ) : (
+                  <>
+                    <span className="text-4xl font-bold">
+                      {pack.currency} {pack.price}
+                    </span>
+                    <span className="text-gray-500">
+                      /{pack.billing_period}
+                    </span>
+                  </>
+                )}
               </div>
 
               <ul className="space-y-3 mb-8">
@@ -149,6 +161,7 @@ export default function UpgradePackPage({
               </ul>
 
               {/* CTA */}
+              {register !== true && (
               <button
                 disabled={disabled}
                 onClick={onClick}
@@ -161,6 +174,7 @@ export default function UpgradePackPage({
               >
                 {buttonLabel}
               </button>
+              )}
             </div>
           );
         })}

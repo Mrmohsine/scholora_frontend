@@ -60,7 +60,7 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
     }
     if (!formData.isOver18)
       newErrors.isOver18 = "You must be 18 years or older";
-     
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -94,10 +94,9 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
         });
       }
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.errors?.email?.[0] ||
-        "Failed to save draft";
+      const errorMessage = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat().join("\n")
+        : error.response?.data?.message || "Failed to save draft";
       await Swal.fire({
         icon: "error",
         title: "Error",
@@ -153,10 +152,9 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
       }
     } catch (error: any) {
       setLoading(false);
-      const errorMessage =
-        error.response?.data?.message ||
-        error.response?.data?.errors?.email?.[0] ||
-        "Failed to save";
+      const errorMessage = error.response?.data?.errors
+        ? Object.values(error.response.data.errors).flat().join("\n")
+        : error.response?.data?.message || "Failed to save";
       await Swal.fire({
         icon: "error",
         title: "Error",
@@ -287,7 +285,6 @@ const AboutStep = ({ formData, onUpdate, onNext }: AboutStepProps) => {
           <p className="text-red-500 text-sm mt-1">{errors.email}</p>
         )}
       </div>
-      
 
       <div className="grid md:grid-cols-2 gap-6">
         <div className="group">

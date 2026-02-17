@@ -127,7 +127,6 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
     }
   };
 
-  const currentPackSlug = null;
 
   return (
     <div className="space-y-8">
@@ -148,15 +147,12 @@ const PricingStep = ({ formData, onUpdate, onSubmit }: PricingStepProps) => {
             max="200"
             disabled={loading}
           />
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <Info className="w-5 h-5 text-gray-400" />
-          </div>
         </div>
         <p className="text-center text-gray-500 text-sm mt-2">Price in MAD only</p>
       </div>
 
       {/* Commission Details */}
-      <UpgradePackPage title={false} currentPackSlug={currentPackSlug}/>
+      <UpgradePackPage title={false} register={true}/>
 
       {/* Buttons */}
       <div className="flex justify-between pt-6">
