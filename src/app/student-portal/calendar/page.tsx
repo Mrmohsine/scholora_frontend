@@ -10,7 +10,7 @@ function StudentCalendarContent() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date(2024, 11)); // December 2024
-
+  
   const events = {
     5: [
       { name: 'Advanc...', type: 'lesson', color: 'bg-blue-200' },

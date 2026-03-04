@@ -524,7 +524,7 @@ export default function VerificationPage() {
     });
     if (result) {
       setTutors(p => p.map(t => t.id === id ? { ...t, status: 'approved' as const, approved_at: new Date().toISOString() } : t));
-      setToast({ type: 'success', message: 'Tutor approved successfully!' });
+      setToast({ type: 'success', message: 'Tutor approved and activation email sent!' });
       load(); // reload stats
     } else {
       setToast({ type: 'error', message: 'Failed to approve. Please try again.' });

@@ -124,7 +124,7 @@ export function calculatePercentageChange(current: number, previous: number): nu
 }
 
 // Debounce function
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -180,9 +180,9 @@ export function filterData<T>(
 export function exportToCSV<T>(data: T[], filename: string): void {
   if (data.length === 0) return;
   
-  const headers = Object.keys(data[0] as any).join(',');
+  const headers = Object.keys(data[0] as Record<string, unknown>).join(',');
   const rows = data.map(item =>
-    Object.values(item as any).map(value =>
+    Object.values(item as Record<string, unknown>).map(value =>
       typeof value === 'string' ? `"${value}"` : value
     ).join(',')
   );
@@ -200,7 +200,7 @@ export function exportToCSV<T>(data: T[], filename: string): void {
 }
 
 // Gestion des erreurs API
-export function handleApiError(error: any): string {
+export function handleApiError(error: { response?: { data?: { message?: string } }; message?: string }): string {
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
@@ -226,8 +226,8 @@ export function generateId(): string {
 // Deep clone object
 export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object') return obj;
-  if (obj instanceof Date) return new Date(obj.getTime()) as any;
-  if (Array.isArray(obj)) return obj.map(deepClone) as any;
+  if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
+  if (Array.isArray(obj)) return obj.map(deepClone) as unknown as T;
   
   const cloned = {} as T;
   for (const key in obj) {
@@ -240,7 +240,7 @@ export function deepClone<T>(obj: T): T {
 }
 
 // Check if object is empty
-export function isEmpty(obj: any): boolean {
+export function isEmpty(obj: unknown): boolean {
   if (obj == null) return true;
   if (Array.isArray(obj) || typeof obj === 'string') return obj.length === 0;
   if (typeof obj === 'object') return Object.keys(obj).length === 0;
@@ -252,71 +252,9 @@ export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Local storage helpers
-export const storage = {
-  get<T>(key: string, defaultValue?: T): T | null {
-    if (typeof window === 'undefined') return defaultValue || null;
-    
-    try {
-      const item = localStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue || null;
-    } catch {
-      return defaultValue || null;
-    }
-  },
-  
-  set<T>(key: string, value: T): void {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Failed to save to localStorage:', error);
-    }
-  },
-  
-  remove(key: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem(key);
-  },
-  
-  clear(): void {
-    if (typeof window === 'undefined') return;
-    localStorage.clear();
-  }
-};
-
-// Session storage helpers
-export const sessionStorage = {
-  get<T>(key: string, defaultValue?: T): T | null {
-    if (typeof window === 'undefined') return defaultValue || null;
-    
-    try {
-      const item = window.sessionStorage.getItem(key);
-      return item ? JSON.parse(item) : defaultValue || null;
-    } catch {
-      return defaultValue || null;
-    }
-  },
-  
-  set<T>(key: string, value: T): void {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      window.sessionStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error('Failed to save to sessionStorage:', error);
-    }
-  },
-  
-  remove(key: string): void {
-    if (typeof window === 'undefined') return;
-    window.sessionStorage.removeItem(key);
-  }
-};
 
 // URL helpers
-export function buildUrl(base: string, params: Record<string, any>): string {
+export function buildUrl(base: string, params: Record<string, unknown>): string {
   const url = new URL(base);
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
@@ -474,7 +412,7 @@ export function isOnline(): boolean {
 }
 
 // Performance helpers
-export function throttle<T extends (...args: any[]) => void>(
+export function throttle<T extends (...args: unknown[]) => void>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -487,10 +425,7 @@ export function throttle<T extends (...args: any[]) => void>(
       func(...args);
     }
   };
-}): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms)),
 }
-
 
 // Local storage helpers
 export const storage = {
