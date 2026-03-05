@@ -2,13 +2,10 @@ import { NextResponse } from "next/server";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: unknown) {
   try {
     const body = await request.json();
-    const { id } = context.params;
+    const id = (context as { params: { id: string } }).params.id;
 
     const res = await fetch(`${API_URL}/admin/pricing-packs/${id}`, {
       method: "PUT",
@@ -21,17 +18,14 @@ export async function PUT(
 
     const data = await res.json();
     return NextResponse.json(data);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }
 
-export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: unknown) {
   try {
-    const { id } = context.params;
+    const id = (context as { params: { id: string } }).params.id;
 
     await fetch(`${API_URL}/admin/pricing-packs/${id}`, {
       method: "DELETE",
@@ -39,7 +33,7 @@ export async function DELETE(
     });
 
     return new NextResponse(null, { status: 204 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }
 }

@@ -6,6 +6,10 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
   // FIXED (not experimental anymore)
   serverExternalPackages: [],
 

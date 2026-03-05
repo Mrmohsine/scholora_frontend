@@ -1,5 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function ClassIndex({ params }: { params: { id: string } }) {
-  redirect(`/student-portal/classes/${params.id}/lessons`);
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function ClassIndex({ params }: Props) {
+  const { id } = await params;
+
+  redirect(`/student-portal/classes/${id}/lessons`);
 }
