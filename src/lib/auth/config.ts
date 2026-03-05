@@ -70,9 +70,3 @@ export const ERROR_MESSAGES = {
   TOKEN_EXPIRED: 'Votre session a expiré. Veuillez vous reconnecter.',
   INVALID_CREDENTIALS: 'Email ou mot de passe incorrect.',
 };
-
-module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-}
